@@ -34,7 +34,11 @@ def get_user_info():
 	user_longitude = r.json()['results'][0]['geometry']['location']['lng']
 	user_email = request.form['user_email']
 	user_name = request.form['user_name']
-	return render_template("profile.html", name = user_name)
+	return render_template("profile.html", name = user_name, longitude=user_longitude, latitude=user_latitude, user_email=user_email)
+
+@app.route('/harvest')
+def harvest():
+	return render_template("harvest.html", key=key)
 
 
 
