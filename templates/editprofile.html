@@ -17,27 +17,16 @@
 		<script src="static/js/skel.min.js"></script>
 		<script src="static/js/init.js"></script>
 		
-<!-- 
-		<link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
-		<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-		<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>	
-		<meta charset=utf-8 />
-		<title>JS Bin</title>
-		
-		<style>
-		  article, aside, figure, footer, header, hgroup, 
-		  menu, nav, section { display: block; }
-		</style>
- -->
+
 		<script>
 		function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                $('#blah')
+                $('#photo')
                     .attr('src', e.target.result)
-                    // .width(50)
+                    .width(250)
                     // .height(100);
             };
 
@@ -97,8 +86,9 @@
 								<div class="6u"><input type="text" name="user_name" placeholder="Name" /></div>
 								<div class="6u"><input type="text" name="user_email" placeholder="Email" /></div>
 								<div class="6u"><input type="text" name= "user_location" placeholder="Location" /></div>
+								<p> add a photo of what you'd like to trade </p>
 								 <input type='file' onchange="readURL(this);" />
-    							<img id="blah" src="#" alt="your image" />
+    							<img id="photo" src="#" alt="your image" />
 								<!-- <div id="map-canvas"></div> -->
 							</div>
 
