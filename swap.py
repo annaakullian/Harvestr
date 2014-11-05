@@ -34,7 +34,7 @@ def get_user_info():
 	user_longitude = r.json()['results'][0]['geometry']['location']['lng']
 	user_email = request.form['user_email']
 	user_name = request.form['user_name']
-	return render_template("profile.html")
+	return render_template("profile.html", name = user_name)
 
 
 
