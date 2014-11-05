@@ -634,7 +634,7 @@
 			padding: 0.85em 3em 0.85em 3em;
 			border-radius: 0.25em;
 			cursor: pointer;
-			border: 0;
+			border: 3px white solid;
 			color: #fff;
 			text-align: center;
 			text-decoration: none;
