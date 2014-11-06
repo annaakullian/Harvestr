@@ -1,16 +1,28 @@
 from flask import Flask, render_template, request
 import os
 import requests 
+from model import User, session as dbsession
+from flask.ext.social import Social 
 
 app =  Flask(__name__)
 app.secret_key="annabanana"
+
+#facebook app stuff!
+app.config['SOCIAL_FACEBOOK'] = {
+    'consumer_key': os.environ.get("FACEBOOK_ID"),
+    'consumer_secret': os.environ.get("FACEBOOK_SECRET")
+}
+app.config['SECURITY_POST_LOGIN'] = '/profile'
+print os.environ.get("FACEBOOK_ID")
+Social(app, dbsession)
 
 key = os.environ.get("GOOGLE_MAPS_EMBED_KEY")
 
 #this is the home page
 @app.route('/')
 def home_page():
-	return render_template("home.html")
+	user = dbsession.query(User).first()
+	return render_template("home.html", user=user)
 
 @app.route('/howitworks')
 def how_it_works():
