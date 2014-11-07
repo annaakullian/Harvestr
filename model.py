@@ -20,47 +20,21 @@ class User(Base):
 	id = Column(Integer, primary_key = True)
 	name = Column(String(100), nullable = True)
 	facebook_id = Column(String(100), nullable = True)
-	email = Column(String(100), nullable = False)
-	latitude = Column(Float, nullable = False)
-	longitude = Column(Float, nullable = False)
-	last_log_in = Column(DateTime, nullable = False)
-
-#these are the matches, connects two items which belong to two different users, once user1 and user2 approves, 
-#there will be a pop up that says "theres a match! and an email to both users"
-class Match_Offer(Base):
-	__tablename__= "match_offers"
-	id = Column(Integer, primary_key = True)
-	item_id_one = Column(Integer, ForeignKey('items.id'))
-	item_id_two = Column(Integer, ForeignKey('items.id'))
-	user_one_approves = Column(Boolean, nullable = False)
-	user_two_approves = Column(Boolean, nullable = False)
-	date_of_match = Column(DateTime, nullable = False)
-
-	#specified which column the foreign key is talking to by saying foreign key = item1 or item2
-	item_one = relationship("Item", backref=backref("match_offers", order_by=id), foreign_keys=[item_id_one])
-	item_two = relationship("Item", backref=backref("match_offers", order_by=id), foreign_keys=[item_id_two])
-
-#these are the messages where the author is a user and a match id will show which two items it matches
-class Message(Base):
-	__tablename__="messages"
-	id = Column(Integer, primary_key = True)
-	author_id = Column(Integer, ForeignKey('users.id'))
-	match_id = Column(Integer, ForeignKey('match_offers.id'))
-	message_content = Column(String(1000), nullable = False)
-
-	author = relationship("User", backref=backref("messages", order_by=id))
-	match_offer = relationship("Match_Offer", backref=backref("messages", order_by=id))
+	email = Column(String(100), nullable = True)
+	latitude = Column(Float, nullable = True)
+	longitude = Column(Float, nullable = True)
+	last_log_in = Column(DateTime, nullable = True)
 
 #here are the items. each item is either available(T) or not (F), this will be a field that the user can control
 class Item(Base):
 	__tablename__="items"
 	id = Column(Integer, primary_key = True)
 	user_id = Column(Integer, ForeignKey('users.id'))
-	available = Column(Boolean, nullable = True)
+	available = Column(Boolean, nullable = False)
 	#how to I store a photo with the path?
-	photo_path = Column(String(100), nullable = False)
-	description = Column(String(140), nullable = False) 
-	date_item_added = Column(DateTime, nullable = False)
+	photo_path = Column(String(100), nullable = True)
+	description = Column(String(140), nullable = True) 
+	date_item_added = Column(DateTime, nullable = True)
 
 	user = relationship("User", backref=backref("items", order_by=id))
 
@@ -68,7 +42,7 @@ class Item(Base):
 class Attribute(Base):
 	__tablename__="attributes"
 	id = Column(Integer, primary_key = True)
-	attribute_type = Column(String(100), nullable = False)
+ 	attribute_type = Column(String(100), nullable = True)
 
 class ItemAttribute(Base):
 	__tablename__="itemsattributes"
@@ -78,11 +52,37 @@ class ItemAttribute(Base):
 
 	attribute_type = relationship("Attribute", backref=backref("itemsattributes", order_by=id))
 	item = relationship("Item", backref=backref("itemsattributes", order_by=id))
-	#find acutal attribute and item
 
-	# def gift():
+ 	# def gift():
 	# 	#this function will see if the item is a gift, if it is, then the match 
-		#offer field will be marked as the user approves to start with
+		# offer field will be marked as the user approves to start with	
+
+# these are the matches, connects two items which belong to two different users, once user1 and user2 approves, 
+# there will be a pop up that says "theres a match! and an email to both users"
+class MatchOffer(Base):
+	__tablename__= "match_offers"
+	id = Column(Integer, primary_key = True)
+	date_of_match = Column(DateTime, nullable = True)
+
+#there will be two matchoffer ids that are the same for two matches
+class MatchOfferItem(Base):
+	__tablename__="match_offer_items"
+	id =  Column(Integer, primary_key = True)
+	match_offer_id = Column(Integer, ForeignKey('match_offers.id'))
+	item_id = Column(Integer, ForeignKey('items.id'))
+
+	match_offer = relationship("MatchOffer", backref=backref("match_offer_items", order_by=id))
+	item = relationship("Item", backref=backref("match_offer_items", order_by=id))
+
+# #these are the messages where the author is a user and a match id will show which two items it matches
+class Message(Base):
+	__tablename__="messages"
+	id = Column(Integer, primary_key = True)
+	match_offer_item_id = Column(Integer, ForeignKey('match_offer_items.id'))
+	message_content = Column(String(1000), nullable = True)
+
+	match_offer_item = relationship("MatchOfferItem", backref=backref("messages", order_by=id))
+
 
 if __name__ == "__main__":
 	Base.metadata.create_all(engine)

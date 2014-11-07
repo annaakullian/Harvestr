@@ -227,7 +227,6 @@
 			}
 
 	/* Image */
-
 		.image
 		{
 			position: relative;
@@ -824,6 +823,7 @@
 		padding: 14em 0 14em 0;
 		text-align: center;
 		color: #fff;
+		opacity: 0.8;
 	}
 	
 		#header header
