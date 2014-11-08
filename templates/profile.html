@@ -47,11 +47,11 @@
 				
 				<div class="content dark style1 featured">
 					<div class="container">
-						<h2>Name: {{ name }}</h2>
-						<h2>Location: {{user_location}} <br>
-							Address: {{longitude, latitude}}
+						<h2>Name: {{ user.name }}</h2>
+						<h2>
+							Address: {{user.longitude, user.latitude}}
 							Email: {{user.email}}</h2>
-						<h1> Your Items </h1>
+						<h1> Your Items </h1><br>
 						<div class="row">
 							<div class="4u">
 								<section> 

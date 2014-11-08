@@ -21,9 +21,11 @@ class User(Base):
 	name = Column(String(100), nullable = True)
 	facebook_id = Column(String(100), nullable = True)
 	email = Column(String(100), nullable = True)
+	location = Column(String(100), nullable=True)
 	latitude = Column(Float, nullable = True)
 	longitude = Column(Float, nullable = True)
 	last_log_in = Column(DateTime, nullable = True)
+	password = Column(String(100), nullable=True)
 
 #here are the items. each item is either available(T) or not (F), this will be a field that the user can control
 class Item(Base):
