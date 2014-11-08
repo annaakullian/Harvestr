@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<!--
+	Tessellate by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>		
+		<title>Harvestr</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<!-- // <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>  -->
+		<script src="static/js/jquery.min.js"></script>
+		<script src="static/js/jquery.scrolly.min.js"></script>
+		<script src="static/js/skel.min.js"></script>
+		<script src="static/js/init.js"></script>
+
+		<script>
+		function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#photo')
+                    .attr('src', e.target.result)
+                    .width(250)
+                    // .height(100);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    } 
+    	</script>
+		
+		<!-- // <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script> -->
+		<!-- // <script src="static/js/geocode.js"></script> -->
+		
+
+		
+		<!-- // <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script> -->
+		
+
+		<noscript>
+			<link rel="stylesheet" href="static/css/skel.css" />
+			<link rel="stylesheet" href="static/css/style.css" />
+			<link rel="stylesheet" href="static/css/style-wide.css" />
+		</noscript>
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
+	
+	
+
+
+	</head>
+
+	<body>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+            <p style = "color:red"><bold>{{ message }}</bold></p>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}  		
+			
+		<!-- First -->
+		<section id="fourth" class="main">
+				<header>
+					<div class="container">  
+						<h2>Join the Harvester Community!</h2>
+					</div>
+				</header>
+				<div class="content style4 featured">
+					<div class="container small">
+						<form method="post" id="location" action="/signup">
+							<div class="row half">
+								<div class="6u"><input type="text" name="user_name" placeholder="Name" /></div>
+								<div class="6u"><input type="text" name="user_email" placeholder="Email" /></div>
+								<div class="6u"><input type="text" name= "user_location" placeholder="Location" /></div>
+								<div class="6u"><input type="text" name= "facebook_id" placeholder="facebook id"/></div>
+								<div class="6u"><input type="password" name= "password" placeholder="password"/></div>
+							</div>							
+							<div class="row">
+								<div class="12u">
+									<ul class="actions">
+										<li><input type="submit" class="button" value="Sign Up" /></li>
+										
+									</ul>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</section>
+
+
+			
+		<!-- Second -->
+	
+
+		
+
+	</body>
+</html>
