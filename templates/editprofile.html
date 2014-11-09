@@ -94,17 +94,47 @@
 								<!-- <div id="map-canvas"></div> -->
 								</div>
 							</div>
-
 							
+							<!-- <div>
+								<script src="/wp-includes/js/addInput.js" language="Javascript" type="text/javascript">
+								</script>
+								<form method="POST">
+								     <div id="dynamicInput">
+								          Item 1<br><input type="text" name="myInputs[]">
+								     </div>
+								     <input type="button" value="Add another item to Harvest" onClick="addInput('dynamicInput');">
+								</form>
+
+								<script>
+								var counter = 1;
+								var limit = 5;
+								function addInput(divName){
+								     if (counter == limit)  {
+								          alert("You have reached the limit of adding " + counter + "open items. Once you have a match, change your item's status to closed, and you can add more items to swap!");
+								     }
+								     else {
+								          var newdiv = document.createElement('div');
+								          newdiv.innerHTML = "Item " + (counter + 1) + " <br><input type='text' name='myInputs[]'>";
+								          document.getElementById(divName).appendChild(newdiv);
+								          counter++;
+								     }
+								}
+								</script>
+								</div> -->
+
+
+
+
 							<div class="row">
 								<div class="12u">
 									<ul class="actions">
-										<input type="text" value="{{ user_id }}" name="user_id"> 
+										
 										<li><input type="submit" class="button" value="Save My Info" /></li>
-										<li><input type="reset" class="button alt" value="Clear Form" /></li>
+										
 									</ul>
 								</div>
 							</div>
+
 						</form>
 					</div>
 				</div>

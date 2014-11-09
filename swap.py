@@ -1,11 +1,29 @@
-from flask import Flask, render_template, request, session, flash, redirect, Markup, g
+from flask import Flask, render_template, request, session, flash, redirect, Markup, make_response
+from flask.ext.login import LoginManager, login_user, login_required, logout_user
+import authomatic 
+from authomatic.adapters import WerkzeugAdapter
+from authomatic import Authomatic
 import os
 import requests 
 from model import User, session as dbsession
 
 
+from authomatic_config import AUTHOMATIC_CONFIG
+
 app =  Flask(__name__)
 app.secret_key="annabanana"
+
+#set up flask login manager and authomatic helpers
+
+app.config['SOCIAL_FACEBOOK'] = {
+    'consumer_key': os.environ.get("FACEBOOK_ID"),
+    'consumer_secret': os.environ.get("FACEBOOK_SECRET")
+}
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+authomatic = Authomatic(AUTHOMATIC_CONFIG, 'your secret string', report_errors=False)
+
 
 key = os.environ.get("GOOGLE_MAPS_EMBED_KEY")
 
@@ -15,6 +33,56 @@ def home_page():
 	# user = dbsession.query(User).first()
 	session['user'] = {}
 	return render_template("home.html")
+
+
+
+# Login route for all OAuth providers. If one were to add a second provider 
+# (i.e. Twitter, Google), more logic could be added to this method by
+# checkingthe "provider_name" variable
+@app.route('/login/<provider_name>/', methods=['GET', 'POST'])
+def login(provider_name):
+	response = make_response()
+	result = authomatic.login(WerkzeugAdapter(request, response), provider_name)
+
+	if result:
+		# If we've received a user from Facebook...
+		if result.user:
+			# Get the user's profile data and look for it in our database
+			result.user.update()
+			facebook_id = result.user.id
+			user = dbsession.query(User).filter_by(facebook_id = facebook_id).first()
+
+			# If we don't find the user in our database, add it!
+			if not user:
+				user = User(facebook_id = facebook_id, email=result.user.email, name=result.user.name)
+				dbsession.add(user)
+				dbsession.commit()
+
+			# Store the user in our session, logging them in 
+			login_user(user)
+
+		# Redirect somewhere after log in. In this case, the homepage
+		return redirect('/')
+
+	return response
+
+# Clear our session, logging the user out and returning them
+# to the home page.
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
+
+# flask-login required method
+# Tell flask-login how to find the current user in the database
+@login_manager.user_loader
+def load_user(id):
+	return dbsession.query(User).filter_by(id = id).first()
+
+
+
+
 
 @app.route('/howitworks')
 def how_it_works():
@@ -46,9 +114,9 @@ def process_new_user():
     	session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebook': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
     	return render_template("profile.html", user=session['user'])
 
-@app.route('/login', methods=['GET'])
-def login():
-	return render_template("login.html")
+# @app.route('/login', methods=['GET'])
+# def login():
+# 	return render_template("login.html")
 
 
 @app.route('/login', methods=['POST'])	
@@ -76,6 +144,7 @@ def editprofile():
 
 @app.route('/editprofile', methods=['POST'])
 def get_user_info():
+	#user info
 	user_location = request.form['user_location']
 	r = requests.get("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&key=AIzaSyDjesZT-7Vc5qErTJjS2tDIvxLQdYBxOEY&address=" +\
 		request.form['user_location'])
@@ -95,6 +164,10 @@ def get_user_info():
 	dbsession.commit()
 	#upate the session
 	session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebook': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
+	
+	#item info
+	# items = request.form['myInputs']
+	# print items
 	return render_template("profile.html", user=session['user'])
 
 

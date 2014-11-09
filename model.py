@@ -27,6 +27,26 @@ class User(Base):
 	last_log_in = Column(DateTime, nullable = True)
 	password = Column(String(100), nullable=True)
 
+	# flask-login required methods for validating a user
+	# ==================================================
+
+	# Check if a user is "active" (i.e. hasn't deleted their account)
+	def is_active(self):
+		return True
+
+	# Tell flask-login how to find our user id
+	def get_id(self):
+		return self.id
+
+	# Check if a user is logged in (True for our main User object)
+	def is_authenticated(self):
+		return True
+
+	# Check if a user is logged out (False for all User objects)
+	def is_anonymous(self):
+		return False
+	
+
 #here are the items. each item is either available(T) or not (F), this will be a field that the user can control
 class Item(Base):
 	__tablename__="items"

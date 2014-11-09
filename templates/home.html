@@ -32,7 +32,18 @@
 					<p>A place to swap food that would other wise be wasted </p>
 				</header>
 				<footer>
-					<a href="/profile" class="button scrolly">Login w Facebook</a>
+					<!-- <a href="/profile" class="button scrolly">Login w Facebook</a> -->
+					<h1>Flask | Log In With Facebook</h1>
+					{% block body %}
+					{% if current_user.is_anonymous() %}
+						Login with <a href="/loginfb/facebook">Facebook</a>.<br />
+					{% else %}
+						Hello {{current_user.name}}! 
+						<a href="/logout">Log out</a>
+					{% endif %}	
+					{% endblock %}
+
+
 					<a href="/login" class="button scrolly">Login </a>
 				</footer>
 				<footer>
