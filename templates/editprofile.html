@@ -82,10 +82,10 @@
 					<div class="container small">
 						<form method="post" id="location" action="/editprofile">
 							<div class="row half">
-								<div class="6u"><input type="text" name="user_name" value={{session['user']['name']}} /></div>
-								<div class="6u"><input type="text" name="user_email" placeholder={{session['user']['email']}} /></div>
-								<div class="6u"><input type="text" name= "user_location" placeholder={{session['user']['location']}} /></div>
-								<div class="6u"><input type="text" name= "facebook_id" placeholder={{session['user']['facebook_id']}}/></div><br>
+								<div class="6u"><input type="text" name="user_name" value={{ user['name']}} /></div>
+								<div class="6u"><input type="text" name="user_email" placeholder={{ user['email']}} /></div>
+								<div class="6u"><input type="text" name= "user_location" placeholder={{ user['location']}} /></div>
+								<div class="6u"><input type="text" name= "facebookid" placeholder={{ user['facebookid']}} /></div><br>
 								
 								<div>
 									<p> add a photo of what you'd like to trade </p>

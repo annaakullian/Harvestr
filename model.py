@@ -19,7 +19,7 @@ class User(Base):
 
 	id = Column(Integer, primary_key = True)
 	name = Column(String(100), nullable = True)
-	facebook_id = Column(String(100), nullable = True)
+	facebookid = Column(String(100), nullable = True)
 	email = Column(String(100), nullable = True)
 	location = Column(String(100), nullable=True)
 	latitude = Column(Float, nullable = True)

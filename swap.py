@@ -12,8 +12,9 @@ key = os.environ.get("GOOGLE_MAPS_EMBED_KEY")
 #this is the home page
 @app.route('/')
 def home_page():
-	user = dbsession.query(User).first()
-	return render_template("home.html", user=user)
+	# user = dbsession.query(User).first()
+	session['user'] = {}
+	return render_template("home.html")
 
 @app.route('/howitworks')
 def how_it_works():
@@ -26,26 +27,24 @@ def sign_up():
 #next put flash in template!!
 @app.route('/signup', methods=['POST'])
 def process_new_user():
+	user_location = request.form['user_location']
 	r = requests.get("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&key=AIzaSyDjesZT-7Vc5qErTJjS2tDIvxLQdYBxOEY&address=" +\
 		request.form['user_location'])
 	user_latitude = r.json()['results'][0]['geometry']['location']['lat']
 	user_longitude = r.json()['results'][0]['geometry']['location']['lng']
-	user_location = request.form['user_location']
 	user_email = request.form['user_email']
-	facebook_id =request.form['facebook_id']
+	facebookid =request.form['facebookid']
 	user_name = request.form['user_name']
 	password = request.form['password']
-	user = User(latitude = user_latitude, longitude=user_longitude, facebook_id=facebook_id, name=user_name, email = user_email, password=password)
+	user = User(latitude = user_latitude, longitude=user_longitude, facebookid=facebookid, name=user_name, email = user_email, password=password, location=user_location)
 	if dbsession.query(User).filter_by(email = user_email).first():
 		flash("That email is taken. If you are already a harvester, log in here!"+ Markup("<h1><a href='/login'>Login</a></h1>"))
 		return redirect('/signup')
 	else:
 		dbsession.add(user)
     	dbsession.commit()
-    	#make sure this works
-    	dbsession.refresh(user)
-    	g.current_user = user 
-    	return render_template("profile.html", user=user, facebook_id=facebook_id, user_location = user_location, name = user_name, longitude=user_longitude, latitude=user_latitude, user_email=user_email)
+    	session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebook': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
+    	return render_template("profile.html", user=session['user'])
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -59,7 +58,7 @@ def process_login():
 
 	user = dbsession.query(User).filter_by(password=password).filter_by(email=user_email).first()
 	if user:
-		session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location }
+		session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebook': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
 		return render_template("profile.html", user=session['user']) 
 	else:
 		flash("That user was not recognized. Please try again, or create an account here:"+ Markup("<h1><a href='/signup'>Signup</a></h1>"))
@@ -67,13 +66,13 @@ def process_login():
 
 @app.route('/profile')	
 def profile():
-	user = dbsession.query(User).first()
-	return render_template("profile.html", user=user)
+	# user = dbsession.query(User).first()
+	return render_template("profile.html")
 
 @app.route('/editprofile', methods=['GET'])
 def editprofile():
-	user = dbsession.query(User).first()
-	return render_template("editprofile.html", key=key, user=user)
+	# user = dbsession.query(User).first()
+	return render_template("editprofile.html", key=key, user=session['user'])
 
 @app.route('/editprofile', methods=['POST'])
 def get_user_info():
@@ -83,15 +82,22 @@ def get_user_info():
 	user_latitude = r.json()['results'][0]['geometry']['location']['lat']
 	user_longitude = r.json()['results'][0]['geometry']['location']['lng']
 	user_email = request.form['user_email']
-	facebook_id =request.form['facebook_id']
+	facebookid =request.form['facebookid']
 	user_name = request.form['user_name']
-	
+
 	user = dbsession.query(User).filter_by(email = session['user']['email']).first()
-	session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebook': user.facebook_id }
-	user.name = user_name 
-	dbsession.add(user)
+	user.name = user_name
+	user.latitude = user_latitude
+	user.longitude = user_longitude
+	user.email = user_email
+	user.location = user_location
+	user.facebookid = facebookid 
 	dbsession.commit()
-	return render_template("profile.html", user_location = user_location, name = user_name, longitude=user_longitude, latitude=user_latitude, user_email=user_email, user=user)
+	#upate the session
+	session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebook': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
+	return render_template("profile.html", user=session['user'])
+
+
 
 @app.route('/harvest')
 def harvest():

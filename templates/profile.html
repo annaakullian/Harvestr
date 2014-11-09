@@ -31,7 +31,7 @@
 	
 			<section id="header" class="dark">
 				<header>
-					<h1>{{user.name}}'s Profile</h1>
+					<h1>{{ user['name'] }}'s Profile</h1>
 				</header>
 				<footer>
 					<a href="/editprofile" class="button scrolly">Edit Profile</a><br>
@@ -47,10 +47,11 @@
 				
 				<div class="content dark style1 featured">
 					<div class="container">
-						<h2>Name: {{ user.name }}</h2>
+						<h2>Name: {{ session['user']['name'] }}</h2>
 						<h2>
-							Address: {{user.longitude, user.latitude}}
-							Email: {{user.email}}</h2>
+							Address: {{user['location']}}
+							Exact Location: {{session['user']['longitude'], session['user']['latitude']}}
+							Email: {{session['user']['email']}}</h2>
 						<h1> Your Items </h1><br>
 						<div class="row">
 							<div class="4u">
