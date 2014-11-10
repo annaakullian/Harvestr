@@ -52,7 +52,12 @@
 							Address: {{user['location']}}
 							Exact Location: {{session['user']['longitude'], session['user']['latitude']}}
 							Email: {{session['user']['email']}}</h2>
-						<h1> Your Items </h1><br>
+
+							<h1> Your Items: {{photos}} </h1><br>
+							{% for photo in photos %}
+							<li> {{ photo }}</li>
+							{% endfor %}
+
 						<div class="row">
 							<div class="4u">
 								<section> 

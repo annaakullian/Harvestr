@@ -74,57 +74,58 @@
 		<!-- First -->
 		<section id="fourth" class="main">
 				<header>
+					 {% with messages = get_flashed_messages() %}
+				      {% if messages %}
+				        <ul class=flashes>
+				        {% for message in messages %}
+				            <p style = "color:red"><bold>{{ message }}</bold></p>
+				        {% endfor %}
+				        </ul>
+				      {% endif %}
+				    {% endwith %}  	
 					<div class="container">  
 						<h2>Edit your info below</h2>
 					</div>
 				</header>
 				<div class="content style4 featured">
 					<div class="container small">
-						<form method="post" id="location" action="/editprofile">
+						<form method="post" id="location" action="/editprofile" enctype="multipart/form-data">
+							<input type="hidden" name="user_email" value="{{ user['email']}}" />
 							<div class="row half">
-								<div class="6u"><input type="text" name="user_name" value={{ user['name']}} /></div>
-								<div class="6u"><input type="text" name="user_email" placeholder={{ user['email']}} /></div>
-								<div class="6u"><input type="text" name= "user_location" placeholder={{ user['location']}} /></div>
-								<div class="6u"><input type="text" name= "facebookid" placeholder={{ user['facebookid']}} /></div><br>
+								<div class="6u"><input type="text" name="user_name" value="{{ user['name']}}" placeholder="Name"/></div>
+								<div class="6u"><input type="text" name="user_email_display" value="{{ user['email']}}" placeholder="email" disabled="true" /></div>
+								<div class="6u"><input type="text" name= "user_location" value="{{ user['location']}}" placeholder="Location" /></div>
+								<div class="6u"><input type="text" name= "facebookid" value="{{ user['facebookid']}}" placeholder="Facebook ID" /></div><br>
+
+
 								
-								<div>
+
+								
+								<div class="12u">
 									<p> add a photo of what you'd like to trade </p>
-								 <input type='file' onchange="readURL(this);" />
-    							<img id="photo" src="#" alt="your image" />
-								<!-- <div id="map-canvas"></div> -->
+									<div id="dynamicInput">
+								          Item 1<br><input type="file" name="file[]">
+								     </div>
+								     <input type="button" value="Add another item to Harvest" onClick="addInput('dynamicInput');">
+
+								     <script>
+										var counter = 1;
+										var limit = 5;
+										function addInput(divName){
+										     if (counter == limit)  {
+										          alert("You have reached the limit of adding " + counter + "open items. Once you have a match, change your item's status to closed, and you can add more items to swap!");
+										     }
+										     else {
+										          var newdiv = document.createElement('div');
+										          newdiv.innerHTML = "Item " + (counter + 1) + " <br><input type='file' name='file[]'>";
+										          document.getElementById(divName).appendChild(newdiv);
+										          counter++;
+										     }
+										}
+									</script>
 								</div>
 							</div>
 							
-							<!-- <div>
-								<script src="/wp-includes/js/addInput.js" language="Javascript" type="text/javascript">
-								</script>
-								<form method="POST">
-								     <div id="dynamicInput">
-								          Item 1<br><input type="text" name="myInputs[]">
-								     </div>
-								     <input type="button" value="Add another item to Harvest" onClick="addInput('dynamicInput');">
-								</form>
-
-								<script>
-								var counter = 1;
-								var limit = 5;
-								function addInput(divName){
-								     if (counter == limit)  {
-								          alert("You have reached the limit of adding " + counter + "open items. Once you have a match, change your item's status to closed, and you can add more items to swap!");
-								     }
-								     else {
-								          var newdiv = document.createElement('div');
-								          newdiv.innerHTML = "Item " + (counter + 1) + " <br><input type='text' name='myInputs[]'>";
-								          document.getElementById(divName).appendChild(newdiv);
-								          counter++;
-								     }
-								}
-								</script>
-								</div> -->
-
-
-
-
 							<div class="row">
 								<div class="12u">
 									<ul class="actions">

@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
 
 
-engine = create_engine("postgres://localhost:5432/harvester", echo=False)
+engine = create_engine("postgres://localhost:5432/harvester", echo=True)
 session = scoped_session(sessionmaker(bind=engine,
                                       autocommit = False,
                                       autoflush = False))
@@ -45,7 +45,7 @@ class User(Base):
 	# Check if a user is logged out (False for all User objects)
 	def is_anonymous(self):
 		return False
-	
+
 
 #here are the items. each item is either available(T) or not (F), this will be a field that the user can control
 class Item(Base):
