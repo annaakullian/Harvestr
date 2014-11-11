@@ -55,6 +55,12 @@
 
 
 	</head>
+	<style>
+	#harvestphoto {
+  		width:20%;
+  		height:auto;
+		}
+	</style>
 
 	<body>
 		<!-- Header -->
@@ -96,10 +102,16 @@
 								<div class="6u"><input type="text" name="user_email_display" value="{{ user['email']}}" placeholder="email" disabled="true" /></div>
 								<div class="6u"><input type="text" name= "user_location" value="{{ user['location']}}" placeholder="Location" /></div>
 								<div class="6u"><input type="text" name= "facebookid" value="{{ user['facebookid']}}" placeholder="Facebook ID" /></div><br>
+				<p>&nbsp;</p>
+				
+					<div>  
+						<h2>Edit your Items</h2>
+					</div>
+				
+								{% for photo in user.items %}
+								<div id="harvestphoto" class="harvestphoto image fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
 
-
-								
-
+								{% endfor %}
 								
 								<div class="12u">
 									<p> add a photo of what you'd like to trade </p>

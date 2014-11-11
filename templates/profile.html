@@ -15,23 +15,23 @@
 		<script src="static/js/jquery.scrolly.min.js"></script>
 		<script src="static/js/skel.min.js"></script>
 		<script src="static/js/init.js"></script>
-		<noscript>
-			<link rel="stylesheet" href="static/css/skel.css" />
-			<link rel="stylesheet" href="static/css/style.css" />
-			<link rel="stylesheet" href="static/css/style-wide.css" />
 		
-		</noscript>
-			<link rel="stylesheet" href="static/css/harvester.css" />
+		<link rel="stylesheet" href="static/css/skel.css" />
+		<link rel="stylesheet" href="static/css/style.css" />
+		<link rel="stylesheet" href="static/css/style-wide.css" />
+		<link rel="stylesheet" href="static/css/harvester.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
 	</head>
+
+
 	<body>
 
 		<!-- Header -->
 	
 			<section id="header" class="dark">
 				<header>
-					<h1>{{ user['name'] }}'s Profile</h1>
+					<h1>{{ user.name }}'s Profile</h1>
 				</header>
 				<footer>
 					<a href="/editprofile" class="button scrolly">Edit Profile</a><br>
@@ -47,15 +47,17 @@
 				
 				<div class="content dark style1 featured">
 					<div class="container">
-						<h2>Name: {{ session['user']['name'] }}</h2>
+						<h2>Name: {{ user.name }}</h2>
 						<h2>
-							Address: {{user['location']}}
-							Exact Location: {{session['user']['longitude'], session['user']['latitude']}}
-							Email: {{session['user']['email']}}</h2>
+							Address: {{user.location}}
+							Exact Location: {{user.longitude}} {{user.latitude}}
+							Email: {{user.email}}</h2>
 
-							<h1> Your Items: {{photos}} </h1><br>
-							{% for photo in photos %}
-							<li> {{ photo }}</li>
+							<!-- <h1> Your Items: {{user.items}} </h1><br> -->
+							
+							{% for photo in user.items %}
+							<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
+
 							{% endfor %}
 
 						<div class="row">

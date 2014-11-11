@@ -1,3 +1,13 @@
-#main-image {
-	opacity: 0.5;
+
+/*.img-circle {
+	border-radius: 50%;
 }
+*/
+.harvestphoto {
+	width:20%;
+	height:auto;
+	/*border-radius: 90%;*/
+	border: 3px solid black
+}
+
+

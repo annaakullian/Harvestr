@@ -57,6 +57,7 @@ class Item(Base):
 	photo_path = Column(String(100), nullable = True)
 	description = Column(String(140), nullable = True) 
 	date_item_added = Column(DateTime, nullable = True)
+	hash_id = Column(Integer, nullable = True)
 
 	user = relationship("User", backref=backref("items", order_by=id))
 

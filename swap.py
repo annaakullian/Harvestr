@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, session, flash, redirect, Markup, url_for, send_from_directory
 from werkzeug import secure_filename
+import hashlib
 # from flask.ext.login import LoginManager, login_user, login_required, logout_user
 # import authomatic 
 # from authomatic.adapters import WerkzeugAdapter
 # from authomatic import Authomatic
 import os
 import requests 
-from model import User, session as dbsession
+from model import User, Item, session as dbsession
 
 
 # from authomatic_config import AUTHOMATIC_CONFIG
@@ -119,8 +120,8 @@ def process_new_user():
 	else:
 		dbsession.add(user)
     	dbsession.commit()
-    	session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebookid': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
-    	return render_template("profile.html", user=session['user'])
+    	session['user_id'] = user.id
+    	return redirect("/profile")
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -134,8 +135,9 @@ def process_login():
 
 	user = dbsession.query(User).filter_by(password=password).filter_by(email=user_email).first()
 	if user:
-		session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebookid': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
-		return render_template("profile.html", user=session['user']) 
+		session['user_id'] = user.id
+		# session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebookid': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
+		return redirect("/profile") 
 	else:
 		flash("That user was not recognized. Please try again, or create an account here:"+ Markup("<h1><a href='/signup'>Signup</a></h1>"))
 		return redirect("/login")
@@ -143,18 +145,20 @@ def process_login():
 @app.route('/profile')	
 def profile():
 	# user = dbsession.query(User).first()
-	return render_template("profile.html")
+	user = dbsession.query(User).get(session['user_id'])
+	return render_template("profile.html", user = user)
 
 @app.route('/editprofile', methods=['GET'])
 def editprofile():
-	# user = dbsession.query(User).first()
-	return render_template("editprofile.html", key=key, user=session['user'])
+	user = dbsession.query(User).get(session['user_id'])
+	return render_template("editprofile.html", key=key, user = user)
 
 @app.route('/editprofile', methods=['POST'])
 def get_user_info():
+	user = dbsession.query(User).get(session['user_id'])
 	user_email = request.form['user_email']
 
-	if session['user']['email'] != user_email:
+	if user.email != user_email:
 		flash("email change not allowed")
 		return redirect(url_for('editprofile'))
 
@@ -177,7 +181,6 @@ def get_user_info():
 		flash("invalid user name")
 		return redirect('/editprofile')
 
-	user = dbsession.query(User).filter_by(email = session['user']['email']).first()
 	user.name = user_name
 	user.latitude = user_latitude
 	user.longitude = user_longitude
@@ -185,23 +188,31 @@ def get_user_info():
 	user.location = user_location
 	user.facebookid = facebookid 
 	dbsession.commit()
-	#upate the session
-	session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebookid': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
 	
-
 	uploaded_files = request.files.getlist("file[]")
 	filenames = []
+	if len(uploaded_files) < 1:
+		print "no photos!"
+		return redirect("/profile")
+	else:
+		for photo in uploaded_files:
+			# if file and allowed_file(file.filename):
+			filename = secure_filename(photo.filename)
+			filedata = photo.stream.read()
+			hash_id = hashlib.md5(filedata).hexdigest()
+			file_path = "/static/uploads/%s" % filename 
+			if dbsession.query(Item).filter_by(hash_id = hash_id).first():
+				flash("This photo already exists!")
+				return redirect(url_for('editprofile'))
+			else:
+				photo.stream.seek(0)
+				photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+				filenames.append(filename)
+				item = Item(user_id = session['user_id'], available = "T", photo_path = file_path, hash_id = hash_id)
+				dbsession.add(item)
+		  		dbsession.commit()
 
-	for photo in uploaded_files:
-		# if file and allowed_file(file.filename):
-		print "helloooo!"
-		print type(photo)
-		print dir(photo)
-		filename = secure_filename(photo.filename)
-		photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		filenames.append(filename)
-
-	return render_template("profile.html", user=session['user'], photos = filenames)
+		return redirect("/profile")
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
