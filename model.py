@@ -57,23 +57,25 @@ class Item(Base):
 	photo_path = Column(String(100), nullable = True)
 	description = Column(String(140), nullable = True) 
 	date_item_added = Column(DateTime, nullable = True)
-	hash_id = Column(Integer, nullable = True)
+	hash_id = Column(String(500), nullable = True)
 
 	user = relationship("User", backref=backref("items", order_by=id))
 
-#here are the possible attributes. e.g.: fruit, gift, 
-class Attribute(Base):
-	__tablename__="attributes"
-	id = Column(Integer, primary_key = True)
- 	attribute_type = Column(String(100), nullable = True)
+# #here are the possible attributes. e.g.: fruit, gift, 
+# class Attribute(Base):
+# 	__tablename__="attributes"
+# 	id = Column(Integer, primary_key = True)
+#  	attribute_type = Column(String(100), nullable = True)
+#  	attribute_value = Column(String(100), nullable = True)
 
 class ItemAttribute(Base):
 	__tablename__="itemsattributes"
 	id = Column(Integer, primary_key = True)
 	item_id = Column(Integer, ForeignKey('items.id'))
-	attribute_id = Column(Integer, ForeignKey('attributes.id'))
+	attribute_name = Column(String(200), nullable = True)
+	attribute_value = Column(String(200), nullable = True)
 
-	attribute_type = relationship("Attribute", backref=backref("itemsattributes", order_by=id))
+	# attribute_type = relationship("Attribute", backref=backref("itemsattributes", order_by=id))
 	item = relationship("Item", backref=backref("itemsattributes", order_by=id))
 
  	# def gift():

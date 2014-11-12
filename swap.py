@@ -7,7 +7,7 @@ import hashlib
 # from authomatic import Authomatic
 import os
 import requests 
-from model import User, Item, session as dbsession
+from model import User, Item, ItemAttribute, session as dbsession
 
 
 # from authomatic_config import AUTHOMATIC_CONFIG
@@ -110,7 +110,7 @@ def process_new_user():
 	user_latitude = r.json()['results'][0]['geometry']['location']['lat']
 	user_longitude = r.json()['results'][0]['geometry']['location']['lng']
 	user_email = request.form['user_email']
-	facebookid =request.form['facebookid']
+	facebookid = request.form['facebookid']
 	user_name = request.form['user_name']
 	password = request.form['password']
 	user = User(latitude = user_latitude, longitude=user_longitude, facebookid=facebookid, name=user_name, email = user_email, password=password, location=user_location)
@@ -146,7 +146,14 @@ def process_login():
 def profile():
 	# user = dbsession.query(User).first()
 	user = dbsession.query(User).get(session['user_id'])
+	print user
 	return render_template("profile.html", user = user)
+
+@app.route('/alluserimages', methods=['GET'])	
+def allimages():
+	# user = dbsession.query(User).first()
+	user = dbsession.query(User).get(session['user_id'])
+	return render_template("alluserimages.html", user = user)
 
 @app.route('/editprofile', methods=['GET'])
 def editprofile():
@@ -175,7 +182,7 @@ def get_user_info():
 
 	user_latitude = r.json()['results'][0]['geometry']['location']['lat']
 	user_longitude = r.json()['results'][0]['geometry']['location']['lng']
-	facebookid =request.form['facebookid']
+	facebookid = request.form['facebookid']
 	user_name = request.form['user_name']
 	if len(user_name) < 1:
 		flash("invalid user name")
@@ -189,30 +196,65 @@ def get_user_info():
 	user.facebookid = facebookid 
 	dbsession.commit()
 	
+	#print "\n\n\n\n\n\n\n\nITEM",request.form
+
+	photo_attribs = ['forv', 'status', 'gift', 'prepicked']
+
+	photo_updates = {}
+	for k,value in request.form.iteritems():
+		if "-" not in k:
+			continue;
+		attr,photo_id = k.split("-")
+		if attr not in photo_attribs:
+			continue
+		if photo_id in photo_updates.keys():
+			photo_updates[photo_id][attr] = value
+		else:
+			photo_updates[photo_id] = {attr: value}
+
+	print photo_updates
+
+	for photo_id, photo_attributes in photo_updates.iteritems():
+		for key, value in photo_attributes.iteritems():
+			#if key == "forv":
+			attribute = dbsession.query(ItemAttribute).filter_by(item_id=photo_id).filter_by(attribute_name=key).first()
+			print attribute,"\n\n\n\n\n\n\n"
+			if attribute == None:
+				attribute = ItemAttribute(\
+					item_id = photo_id,\
+					attribute_name = key,\
+					attribute_value = value)
+				dbsession.add(attribute)
+			else:
+				attribute.attribute_value = value
+			dbsession.commit()
+
+
+
+
+
 	uploaded_files = request.files.getlist("file[]")
 	filenames = []
-	if len(uploaded_files) < 1:
-		print "no photos!"
-		return redirect("/profile")
-	else:
-		for photo in uploaded_files:
-			# if file and allowed_file(file.filename):
-			filename = secure_filename(photo.filename)
-			filedata = photo.stream.read()
-			hash_id = hashlib.md5(filedata).hexdigest()
-			file_path = "/static/uploads/%s" % filename 
-			if dbsession.query(Item).filter_by(hash_id = hash_id).first():
-				flash("This photo already exists!")
-				return redirect(url_for('editprofile'))
-			else:
-				photo.stream.seek(0)
-				photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-				filenames.append(filename)
-				item = Item(user_id = session['user_id'], available = "T", photo_path = file_path, hash_id = hash_id)
-				dbsession.add(item)
-		  		dbsession.commit()
 
-		return redirect("/profile")
+	for photo in uploaded_files:
+		if photo.filename == '':
+			continue
+		# if file and allowed_file(file.filename):
+		filename = secure_filename(photo.filename)
+		filedata = photo.stream.read()
+		hash_id = hashlib.md5(filedata).hexdigest()
+		file_path = "/static/uploads/%s" % filename 
+		if dbsession.query(Item).filter_by(hash_id = hash_id).first():
+			flash("This photo already exists! You can edit the information on your current photo")
+			return redirect(url_for('editprofile'))
+		else:
+			photo.stream.seek(0)
+			photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			filenames.append(filename)
+			item = Item(user_id = session['user_id'], available = "T", photo_path = file_path, hash_id = hash_id)
+			dbsession.add(item)
+	  		dbsession.commit()
+	return redirect("/profile")
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
