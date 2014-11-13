@@ -1,5 +1,4 @@
 Flask==0.10.1
-Flask-SQLAlchemy==0.16
 Jinja2==2.7.3
 MarkupSafe==0.23
 SQLAlchemy==0.9.8
@@ -17,8 +16,9 @@ Flask-OAuth==0.12
 Flask-Principal==0.4.0
 Flask-SQLAlchemy==2.0
 Flask-Security==1.7.4
-Flask-Social==1.6.2
 Flask-WTF==0.10.2
+
+Authomatic==0.0.9
 
 WTForms==2.0.1
 

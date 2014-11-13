@@ -45,23 +45,23 @@
 					<form method="post" id="filter" action="/editprofile" enctype="multipart/form-data">
 						 <div id="distance" class="4u">
 						 	<select name="distance">
-								<option value="volvo">1 mile</option>
-								<option value="saab">5 miles</option>
-								<option value="fiat">10 miles</option>
-								<option value="audi">25 miles</option>
-								<option value="audi">50 miles</option>
+								<option name="1 mile" value="1 mile">1 mile</option>
+								<option name="5 miles" value="5 miles">5 miles</option>
+								<option name="10 miles" value="10 miles">10 miles</option>
+								<option name="25 miles" value="25 miles">25 miles</option>
+								<option name="50 miles" value="50 miles">50 miles</option>
 							</select> 
 						</div>
 
 
 						<div>
-	  						<div><input type="checkbox" name="Veggie" value="Veggie"> Veggie</div>
-							<div><input type="checkbox" name="Fruit" value="Fruit" checked="checked"> Fruit</div>
-							<div><input type="checkbox" name="prepicked" value="prepicked"> Prepicked</div>
-							<div><input type="checkbox" name="Gifts" value="Gifts"> Gifts</div>
+	  						<div><input class="harvest-checkbox" type="checkbox" name="Veggie" value="Veggie"> Veggie</div>
+							<div><input class="harvest-checkbox" type="checkbox" name="Fruit" value="Fruit" checked="checked"> Fruit</div>
+							<div><input class="harvest-checkbox" type="checkbox" name="prepicked" value="prepicked"> Prepicked</div>
+							<div><input class="harvest-checkbox" type="checkbox" name="Gifts" value="Gifts"> Gifts</div>
 						</div>
 
-						<input type="submit" value="Harvest!">
+						<input type="submit" id="harvest" value="Harvest!">
 					</form>
 					<div id="swapimage" class="6u"><a href="#" class="image fit"><img src="static/images/plums.jpg" alt="" width="42" height="auto" border="5"/></a></div>
 				</header>
@@ -74,8 +74,22 @@
 
 	</body>
 	<script>
-		  $("#harvest").click(function (event) {
-		    var url = "/result?" + $("#filter-form").serialize();
+		  $("#harvest").submit(function (event) {
+		  	event.preventDefault();
+		  	var $filter = $( this ),
+		  		url = $filter.attr( 'action'),
+		  		checked = {};
+		  		$(".harvest-checkbox").each(function( index ) {
+		  			if $( this ).prop('checked') {
+		  				checked.$(this).name() = true
+		  		})
+		  		
+		  			
+		  		}
+		  		
+		  	var posting = $.post( url, { distance: $('#distance').val(), veggie: $('#veggie'), })
+		  	}
+		    $("#filter").serializeArray();
 		    console.log(url);
 		    $("#filter-result").load(url);
 		  })

@@ -84,12 +84,11 @@
 				<div class="content style4 featured">
 					<div class="container small">
 						<form method="post" id="location" action="/editprofile" enctype="multipart/form-data">
-							<input type="hidden" name="user_email" value="{{ user['email']}}" />
+							
 							<div class="row half">
-								<div class="6u"><input type="text" name="user_name" value="{{ user['name']}}" placeholder="Name"/></div>
-								<div class="6u"><input type="text" name="user_email_display" value="{{ user['email']}}" placeholder="email" disabled="true" /></div>
-								<div class="6u"><input type="text" name= "user_location" value="{{ user['location']}}" placeholder="Location" /></div>
-								<div class="6u"><input type="text" name= "facebookid" value="{{ user['facebookid']}}" placeholder="Facebook ID" /></div><br>
+								<div class="6u"><input type="text" name="user_name" value="{{ current_user.name}}" placeholder="Name"/></div>
+								<div class="6u"><input type="text" name= "user_location" value="{{ current_user.location}}" placeholder="Location" /></div>
+								
 					
 				<p>&nbsp;</p>
 
@@ -98,7 +97,7 @@
 						<h1><bold>Edit your Items</bold></h1>
 					</div>
 				
-								{% for photo in user.items %}
+								{% for photo in current_user.items %}
 								<div>
 								<div id="harvestphoto" class="harvestphoto image fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
 									Fruit or Veggie?

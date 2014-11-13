@@ -31,7 +31,7 @@
 	
 			<section id="header" class="dark">
 				<header>
-					<h1>{{ user.name }}'s Profile</h1>
+					<h1>{{ current_user.name }}'s Profile</h1>
 				</header>
 				<footer>
 					<a href="/editprofile" class="button scrolly">Edit Profile</a><br>
@@ -48,11 +48,10 @@
 				<div class="content dark style1 featured">
 					<div class="container">
 						<p>
-							Address: {{user.location}}<br>
-							Exact Location: {{user.longitude}} {{user.latitude}}<br>
-							Email: {{user.email}}</p>
+							Address: {{current_user.location}}<br>
+							Exact Location: {{current_user.longitude}} {{current_user.latitude}}<br>
+							Email: {{current_user.email}}</p>
 
-							<!-- <h1> Your Items: {{user.items}} </h1><br> -->
 							
 							
 							<div class="row">
@@ -60,12 +59,12 @@
 								<section> 
 									<span class="feature-icon"><span class="icon fa-leaf"></span></span>
 									<header>
-										<h3>{{user.name}}'s OPEN ITEMS:</h3>
+										<h3>{{current_user.name}}'s OPEN ITEMS:</h3>
 									</header>
 										<p>check out all of your items!</p>
 								</section>
 							</div>
-							{% for photo in user.items %}
+							{% for photo in current_user.items %}
 								{% for attribute in photo.itemsattributes %}
 									{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
 									<div class="column">
@@ -98,7 +97,7 @@
 										<p>check out all of your matches!</p>
 								</section>
 							</div>
-							{% for photo in user.items %}
+							{% for photo in current_user.items %}
 								{% for attribute in photo.itemsattributes %}
 									{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
 									<div class="column">
