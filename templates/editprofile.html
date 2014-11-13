@@ -95,34 +95,39 @@
 
 				
 					<div>  
-						<h2>Edit your Items</h2>
+						<h1><bold>Edit your Items</bold></h1>
 					</div>
 				
 								{% for photo in user.items %}
 								<div>
-								<div id="harvestphoto" class="harvestphoto image fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/> width: 50%</div>
+								<div id="harvestphoto" class="harvestphoto image fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
 									Fruit or Veggie?
 									<!-- <input type="hidden" name="item[{{ photo.id }}][]" value="{{ photo.id }}"> -->
-\									<select name="forv-{{ photo.id }}">
-										<option value="fruit">Fruit</option>
-										<option value="veggie">Veggie</option>
-										<option value="other">Other</option>
+									<select name="forv-{{ photo.id }}">
+										{% for option in ["fruit", "veggie", "other"] %}		
+											<option value= "{{ option }}" {% if items_attribute_dictionary.get(photo.id, {}).get('forv') == option %} selected{% endif %}>{{option | capitalize}}
+										{% endfor %}</option>
 									</select>
 									Open or Closed?
 									<select name="status-{{ photo.id }}">
-										<option value="visible">Open</option>
-										<option value="invisible">Closed</option>
+										{% for option in ["open", "closed"] %}
+											<option value="{{ option }}" {% if items_attribute_dictionary.get(photo.id, {}).get('status') == option %} selected{% endif %}>{{option | capitalize}}
+											{% endfor %}</option>
 									</select>
 									Gift?
 									<select name="gift-{{ photo.id }}">
-										<option value="yes">yes</option>
-										<option value="no">no</option>
+										{% for option in ["yes", "no"] %}
+											<option value="{{ option }}" {% if items_attribute_dictionary.get(photo.id, {}).get('gift') == option %} selected{% endif %}>{{option | capitalize}}
+											{% endfor %}</option>
 									</select>
 									Prepicked?
 									<select name="prepicked-{{ photo.id }}">
-										<option value="yes">yes</option>
-										<option value="no">no</option>
+										{% for option in ["yes", "no"] %}
+											<option value="{{ option }}" {% if items_attribute_dictionary.get(photo.id, {}).get('prepicked') == option %} selected{% endif %}>{{option | capitalize}}
+										{% endfor %}</option>
 									</select>
+									Add a short description of your item below.
+									<div><input type="text" name="item_description-{{ photo.id }}" value= "{{ photo.description }}" placeholder="Item Description"/></div>
 							</div>
 						
 								{% endfor %}

@@ -52,8 +52,7 @@ class Item(Base):
 	__tablename__="items"
 	id = Column(Integer, primary_key = True)
 	user_id = Column(Integer, ForeignKey('users.id'))
-	available = Column(Boolean, nullable = False)
-	#how to I store a photo with the path?
+	# available = Column(Boolean, nullable = False)
 	photo_path = Column(String(100), nullable = True)
 	description = Column(String(140), nullable = True) 
 	date_item_added = Column(DateTime, nullable = True)

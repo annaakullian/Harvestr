@@ -47,101 +47,82 @@
 				
 				<div class="content dark style1 featured">
 					<div class="container">
-						<h2>Name: {{ user.name }}</h2>
-						<h2>
-							Address: {{user.location}}
-							Exact Location: {{user.longitude}} {{user.latitude}}
-							Email: {{user.email}}</h2>
+						<p>
+							Address: {{user.location}}<br>
+							Exact Location: {{user.longitude}} {{user.latitude}}<br>
+							Email: {{user.email}}</p>
 
 							<!-- <h1> Your Items: {{user.items}} </h1><br> -->
 							
+							
+							<div class="row">
+							<div class="12u">
+								<section> 
+									<span class="feature-icon"><span class="icon fa-leaf"></span></span>
+									<header>
+										<h3>{{user.name}}'s OPEN ITEMS:</h3>
+									</header>
+										<p>check out all of your items!</p>
+								</section>
+							</div>
 							{% for photo in user.items %}
-							<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
-
+								{% for attribute in photo.itemsattributes %}
+									{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
+									<div class="column">
+										<div class="12u">
+											<section>
+												<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
+											</section>
+										</div>
+									</div>
+									{% endif %}
+								{% endfor %}
 							{% endfor %}
 
-						<div class="row">
-							<div class="4u">
-								<section> 
-									<span class="feature-icon"><span class="icon fa-clock-o"></span></span>
-									<header>
-										<h3>Plums</h3>
-									</header>
-									<p>description of plums.</p>
-								</section>
-							</div>
-							<div class="4u">
-								<section>
-									<span class="feature-icon"><span class="icon fa-bolt"></span></span>
-									<header>
-										<h3>Lemons</h3>
-									</header>
-									<p>the lemons are off the hook.</p>
-								</section>
-							</div>
-							<div class="4u">
-								<section>
-									<span class="feature-icon"><span class="icon fa-cloud"></span></span>
-									<header>
-										<h3>Mint</h3>
-									</header>
-									<p>mmm mint</p>
-								</section>
-							</div>
-							<div class="4u">
-								<section>
-									<span class="feature-icon"><span class="icon fa-cloud"></span></span>
-									<header>
-										<h3>Sun Flowers</h3>
-									</header>
-									<p>sunflowers! awesome!.</p>
-								</section>
-							</div>
-						</div>
-						<div class="row">
+							<div class="column">
 							<div class="12u">
 								<footer>
 									<a href="/alluserimages" class="button scrolly">View all items</a>
 								</footer>
 							</div>
 						</div>
-					</div>
-				</div>
-			</section>
+						
 
-		<!-- Second -->
-			<section id="second" class="main">
-				
-				<div class="content dark style2">
-					<div class="container">
-						<div class="row">
-							<div class="4u">
-								<section>
-									<h3>Check out your current <bold> Matches!</bold></h3>
-									<p>Click on a Match to message them!</p>
-									<footer>
-										<a href="#third" class="button scrolly">View Past Matches</a>
-									</footer>
+				<div class="row">
+							<div class="12u">
+								<section> 
+									<span class="feature-icon"><span class="icon fa-puzzle-piece"></span></span>
+									<header>
+										<h3>YOUR CURRENT MATCHES:</h3>
+									</header>
+										<p>check out all of your matches!</p>
 								</section>
 							</div>
-							<div class="8u">
-								<div class="row no-collapse">
-									<div class="6u"><a href="#" class="image fit"><img id="main-image" src="static/images/pic01.jpg" alt=""/></a></div>
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic02.jpg" alt="" /></a></div>
-								</div>
-								<div class="row no-collapse">
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic03.jpg" alt="" /></a></div>
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic04.jpg" alt="" /></a></div>
-								</div>
-								<div class="row no-collapse">
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic05.jpg" alt="" /></a></div>
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic06.jpg" alt="" /></a></div>
-								</div>
+							{% for photo in user.items %}
+								{% for attribute in photo.itemsattributes %}
+									{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
+									<div class="column">
+										<div class="12u">
+											<section>
+												<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
+											</section>
+										</div>
+									</div>
+									{% endif %}
+								{% endfor %}
+							{% endfor %}	
+
+							<div class="column">
+							<div class="12u">
+								<footer>
+									<a href="/alluserimages" class="button scrolly">View all Matches</a>
+								</footer>
 							</div>
-						</div>
-					</div>
-				</div>
-			</section>
+						</div>		
+				
+
+						
+
 			
 	
 		

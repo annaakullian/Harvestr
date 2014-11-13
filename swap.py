@@ -144,9 +144,8 @@ def process_login():
 
 @app.route('/profile')	
 def profile():
-	# user = dbsession.query(User).first()
 	user = dbsession.query(User).get(session['user_id'])
-	print user
+	# item_dictionary = item_dictionary
 	return render_template("profile.html", user = user)
 
 @app.route('/alluserimages', methods=['GET'])	
@@ -158,7 +157,15 @@ def allimages():
 @app.route('/editprofile', methods=['GET'])
 def editprofile():
 	user = dbsession.query(User).get(session['user_id'])
-	return render_template("editprofile.html", key=key, user = user)
+	items_attribute_dictionary = {}
+	items = user.items
+	for item in items:
+		for attribute in item.itemsattributes:
+			if item.id in items_attribute_dictionary.keys():
+				items_attribute_dictionary[item.id][attribute.attribute_name] = attribute.attribute_value
+			else:
+				items_attribute_dictionary[item.id] = {attribute.attribute_name : attribute.attribute_value}	
+	return render_template("editprofile.html", key=key, user = user, items_attribute_dictionary = items_attribute_dictionary)
 
 @app.route('/editprofile', methods=['POST'])
 def get_user_info():
@@ -195,7 +202,23 @@ def get_user_info():
 	user.location = user_location
 	user.facebookid = facebookid 
 	dbsession.commit()
-	
+
+	description_attribute = ['item_description']
+
+	item_descriptions = {}
+	for k,value in request.form.iteritems():
+		if "-" not in k:
+			continue;
+		item_description,photo_id = k.split("-")
+		if item_description not in description_attribute:
+			continue
+		item_descriptions[photo_id] = value
+
+	for photo_id, item_description in item_descriptions.iteritems():
+		item = dbsession.query(Item).filter_by(id=photo_id).first()
+		item.description = item_description
+		dbsession.commit()
+
 	#print "\n\n\n\n\n\n\n\nITEM",request.form
 
 	photo_attribs = ['forv', 'status', 'gift', 'prepicked']
@@ -212,13 +235,11 @@ def get_user_info():
 		else:
 			photo_updates[photo_id] = {attr: value}
 
-	print photo_updates
 
 	for photo_id, photo_attributes in photo_updates.iteritems():
 		for key, value in photo_attributes.iteritems():
 			#if key == "forv":
 			attribute = dbsession.query(ItemAttribute).filter_by(item_id=photo_id).filter_by(attribute_name=key).first()
-			print attribute,"\n\n\n\n\n\n\n"
 			if attribute == None:
 				attribute = ItemAttribute(\
 					item_id = photo_id,\
@@ -228,9 +249,6 @@ def get_user_info():
 			else:
 				attribute.attribute_value = value
 			dbsession.commit()
-
-
-
 
 
 	uploaded_files = request.files.getlist("file[]")
@@ -251,7 +269,7 @@ def get_user_info():
 			photo.stream.seek(0)
 			photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			filenames.append(filename)
-			item = Item(user_id = session['user_id'], available = "T", photo_path = file_path, hash_id = hash_id)
+			item = Item(user_id = session['user_id'], photo_path = file_path, hash_id = hash_id)
 			dbsession.add(item)
 	  		dbsession.commit()
 	return redirect("/profile")

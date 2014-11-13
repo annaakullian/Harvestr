@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Tessellate by HTML5 UP</title>
+		<title>Harvestr</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
@@ -19,193 +19,65 @@
 			<link rel="stylesheet" href="static/css/skel.css" />
 			<link rel="stylesheet" href="static/css/style.css" />
 			<link rel="stylesheet" href="static/css/style-wide.css" />
+			<link rel="stylesheet" href="static/css/harvester.css" />
 		</noscript>
-		
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
 	</head>
+	<style>
+	#filtertext {
+	    color: black;}
+	#distance {
+		display: inline-block;
+		text-align: center;
+	}
+	#swapimage {
+		border: solid;
+	}
+	</style>
 	<body>
-				{% block body %} {% endblock %}
+
 		<!-- Header -->
-			<section id="header" class="dark">
-				<header>
-					<h1>Harvestr</h1>
-					<p>A place to swap food that would other wise be wasted <a href="http://html5up.net">HTML5 UP</a></p>
+			<section id="header" class="main" class="dark">
+				<header id="filtertext">
+					<h1>Filter</h1>
+					<p>I want to harvest within:</p>
+					<form method="post" id="filter" action="/editprofile" enctype="multipart/form-data">
+						 <div id="distance" class="4u">
+						 	<select name="distance">
+								<option value="volvo">1 mile</option>
+								<option value="saab">5 miles</option>
+								<option value="fiat">10 miles</option>
+								<option value="audi">25 miles</option>
+								<option value="audi">50 miles</option>
+							</select> 
+						</div>
+
+
+						<div>
+	  						<div><input type="checkbox" name="Veggie" value="Veggie"> Veggie</div>
+							<div><input type="checkbox" name="Fruit" value="Fruit" checked="checked"> Fruit</div>
+							<div><input type="checkbox" name="prepicked" value="prepicked"> Prepicked</div>
+							<div><input type="checkbox" name="Gifts" value="Gifts"> Gifts</div>
+						</div>
+
+						<input type="submit" value="Harvest!">
+					</form>
+					<div id="swapimage" class="6u"><a href="#" class="image fit"><img src="static/images/plums.jpg" alt="" width="42" height="auto" border="5"/></a></div>
 				</header>
+				
 				<footer>
-					<a href="#first" class="button scrolly">Proceed to second phase</a>
+					<a href="/profile" class="button scrolly">Back to My Profile</a>
 				</footer>
-			</section>
 			
-		<!-- First -->
-			<section id="first" class="main">
-				<header>
-					<div class="container">
-						<h2>Tessellate is a free responsive site template</h2>
-						<p>Gravida dis placerat lectus ante vel nunc euismod eget ornare varius gravida euismod lorem ipsum dolor sit amet consequat<br />
-						feugiat. Gravida dis placerat lectus ante vel nunc euismod eget ornare varius gravida euismod lorem ipsum dolor sit amet.</p>
-					</div>
-				</header>
-				<div class="content dark style1 featured">
-					<div class="container">
-						<div class="row">
-							<div class="4u">
-								<section>
-									<span class="feature-icon"><span class="icon fa-clock-o"></span></span>
-									<header>
-										<h3>Gravida</h3>
-									</header>
-									<p>Gravida dis placerat lectus ante vel nunc euismod est turpis sodales. 
-									Diam tempor dui lacinia accumsan vivamus. Gravida dis placerat lectus 
-									ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-									accumsan vivamus.</p>
-								</section>
-							</div>
-							<div class="4u">
-								<section>
-									<span class="feature-icon"><span class="icon fa-bolt"></span></span>
-									<header>
-										<h3>Vivamus</h3>
-									</header>
-									<p>Gravida dis placerat lectus ante vel nunc euismod est turpis sodales. 
-									Diam tempor dui lacinia accumsan vivamus. Gravida dis placerat lectus 
-									ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-									accumsan vivamus.</p>
-								</section>
-							</div>
-							<div class="4u">
-								<section>
-									<span class="feature-icon"><span class="icon fa-cloud"></span></span>
-									<header>
-										<h3>Accumsan</h3>
-									</header>
-									<p>Gravida dis placerat lectus ante vel nunc euismod est turpis sodales. 
-									Diam tempor dui lacinia accumsan vivamus. Gravida dis placerat lectus 
-									ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-									accumsan vivamus.</p>
-								</section>
-							</div>
-						</div>
-						<div class="row">
-							<div class="12u">
-								<footer>
-									<a href="#second" class="button scrolly">Gravida tempor lacinia</a>
-								</footer>
-							</div>
-						</div>
-					</div>
-				</div>
 			</section>
-
-		<!-- Second -->
-			<section id="second" class="main">
-				<header>
-					<div class="container">
-						<h2>Euismod sed feugiat lorem tempus magna</h2>
-						<p>Gravida dis placerat lectus ante vel nunc euismod eget ornare varius gravida euismod lorem ipsum dolor sit amet consequat<br />
-						feugiat. Gravida dis placerat lectus ante vel nunc euismod eget ornare varius gravida euismod lorem ipsum dolor sit amet.</p>
-					</div>
-				</header>
-				<div class="content dark style2">
-					<div class="container">
-						<div class="row">
-							<div class="4u">
-								<section>
-									<h3>Augue vivamus sed ipsum commodo lorem dolor</h3>
-									<p>Gravida dis placerat lectus ante vel nunc euismod est turpis sodales. Diam
-									tempor dui lacinia eget ornare varius gravida. Gravida dis placerat lectus ante 
-									vel nunc euismod est turpis sodales. Diam tempor dui lacinia accumsan vivamus 
-									augue cubilia vivamus nisi eu eget ornare varius gravida euismod.  Gravida dis 
-									lorem ipsum dolor placerat magna tempus feugiat.</p>
-									<p>Lectus ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-									accumsan vivamus augue cubilia vivamus nisi eu eget ornare varius gravida dolore
-									euismod lorem ipsum dolor.</p>
-									<footer>
-										<a href="#third" class="button scrolly">Accumsan nisi tempor</a>
-									</footer>
-								</section>
-							</div>
-							<div class="8u">
-								<div class="row no-collapse">
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic01.jpg" alt="" /></a></div>
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic02.jpg" alt="" /></a></div>
-								</div>
-								<div class="row no-collapse">
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic03.jpg" alt="" /></a></div>
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic04.jpg" alt="" /></a></div>
-								</div>
-								<div class="row no-collapse">
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic05.jpg" alt="" /></a></div>
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic06.jpg" alt="" /></a></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			
-		<!-- Third -->
-			<section id="third" class="main">
-				<header>
-					<div class="container">
-						<h2>Ornare varius lorem ipsum ante lectus</h2>
-						<p>Gravida dis placerat lectus ante vel nunc euismod eget ornare varius gravida euismod lorem ipsum dolor sit amet consequat<br />
-						feugiat. Gravida dis placerat lectus ante vel nunc euismod eget ornare varius gravida euismod lorem ipsum dolor sit amet.</p>
-					</div>
-				</header>
-				<div class="content dark style3">
-					<div class="container">
-						<span class="image featured"><img src="static/images/pic07.jpg" alt="" /></span>
-						<div class="row">
-							<div class="4u">
-								<h3>Diam vivamus turpis lorem sodales lectus ornare</h3>
-								<p>Gravida dis placerat lectus ante vel nunc euismod est turpis sodales. Diam 
-								tempor dui lacinia eget ornare varius gravida. Gravida dis placerat lectus ante 
-								vel nunc euismod est turpis sodales. Diam tempor dui lacinia accumsan vivamus 
-								augue cubilia vivamus nisi eu eget ornare varius gravida euismod.  Gravida dis 
-								lorem ipsum dolor placerat magna tempus feugiat.</p>
-								<p>Lectus ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-								accumsan vivamus augue cubilia vivamus nisi eu eget ornare varius gravida dolore 
-								euismod lorem ipsum dolor sit amet consequat. vivamus nisi eu eget ornare varius 
-								gravida dolore euismod lorem ipsum dolor sit amet consequat. vivamus nisi eu 
-								eget ornare et magna.</p>
-							</div>
-							<div class="4u">
-								<p>Gravida dis placerat lectus ante vel nunc euismod est turpis sodales. Diam 
-								tempor dui lacinia eget ornare varius gravida. Gravida dis placerat lectus ante 
-								vel nunc euismod est turpis sodales. Diam tempor dui lacinia accumsan vivamus 
-								augue cubilia vivamus nisi eu eget ornare varius gravida euismod.  Gravida dis 
-								lorem ipsum dolor placerat magna tempus feugiat.</p>
-								<p>Lectus ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-								accumsan vivamus augue cubilia vivamus nisi eu eget ornare varius gravida dolore 
-								euismod lorem ipsum dolor sit amet consequat eget ornare varius gravida euismod.
-								Gravida dis lorem ipsum dolor placerat magna tempus feugiat magna tempus lorem.</p>
-								<p>Lectus ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-								accumsan vivamus augue cubilia.</p>
-							</div>
-							<div class="4u">
-								<p>Placerat lectus ante vel nunc euismod est turpis sodales. Diam tempor dui 
-								lacinia eget ornare varius gravida. Gravida dis placerat lectus ante vel nunc 
-								euismod est turpis sodales. Diam tempor dui lacinia accumsan vivamus augue 
-								cubilia vivamus nisi eu eget ornare varius gravida euismod.  Gravida dis 
-								lorem ipsum dolor placerat magna tempus feugiat. Lectus ante vel nunc euismod 
-								est turpis sodales. Diam tempor dui lacinia dolore.</p>
-								<p>Accumsan vivamus augue cubilia vivamus nisi eu eget ornare varius gravida 
-								dolore euismod lorem ipsum dolor sit amet conseismod lorem ipsum dolor sit amet 
-								consequat lorem ipsum consequat feugiat sed tempus euismod feugiat veroeros.</p>
-								<footer>
-									<a href="#fourth" class="button scrolly">Ipsum ornare lorem dolor</a>
-								</footer>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-		
-		
-	
-			
 
 	</body>
+	<script>
+		  $("#harvest").click(function (event) {
+		    var url = "/result?" + $("#filter-form").serialize();
+		    console.log(url);
+		    $("#filter-result").load(url);
+		  })
+	</script>
 </html>
