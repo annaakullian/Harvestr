@@ -3,6 +3,11 @@
 	border-radius: 50%;
 }
 */
+.title{
+	padding-top: 1em;
+	font-size: 3em;
+}
+
 .harvestphoto {
 	width:20%;
 	height:auto;
@@ -10,7 +15,25 @@
 	/*border: 3px solid black*/
 }
 
-.harvesttext {
-	color: blue;
+
+.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
+.navbar li 
+{
+	width:10%;
+    display: inline-block;
+}
+
+header p
+{
+	text-align: center;
+	text-shadow: -1px -1px 0 #000,
+ 				1px -1px 0 #000,
+ 				-1px 1px 0 #000,
+ 				1px 1px 0 #000;
+
+} 

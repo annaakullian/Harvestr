@@ -1,2 +1,22 @@
-{% extends "base.html" %}
-jhtfjhfjhfjhfgjhgfjhfgjhfg
+{% extends 'base.html' %}
+
+{% block css %}
+   <link rel="stylesheet" href="static/css/home-css.css">
+{% endblock %}
+
+{% block entirepage %}
+<section class="main" class="dark">
+	Harvester<br>
+	{% if current_user.is_anonymous() %}
+		<a href="/login/facebook" class="button scrolly">Login with Facebook</a>
+		<a href="/howitworks" class="button scrolly">How It Works</a>
+
+	{% else %}
+		Hello {{current_user.name}}!<br>
+		<a href="/profile" class="button scrolly">View Profile</a><br>
+		<a href="/logout" class="button scrolly">Log out</a>
+	{% endif %}	
+</section>
+
+{% endblock %}
+

@@ -7,9 +7,9 @@
 <html>
 	<head>
 		<title>Tessellate by HTML5 UP</title>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<!-- <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="description" content="" />
-		<meta name="keywords" content="" />
+		<meta name="keywords" content="" /> -->
 		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
 		<script src="static/js/jquery.min.js"></script>
 		<script src="static/js/jquery.scrolly.min.js"></script>
@@ -19,35 +19,35 @@
 			<link rel="stylesheet" href="static/css/skel.css" />
 			<link rel="stylesheet" href="static/css/style.css" />
 			<link rel="stylesheet" href="static/css/style-wide.css" />
-			<link rel="stylesheet" href="static/css/harvester.css" />
 
 		</noscript>
+
+        {% block css %}
+		<link rel="stylesheet" href="static/css/harvester.css" />
+        {% endblock %}
+
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
 	</head>
 	<body>
 
-		<!-- Header -->
-			<section id="header" class="dark">
-				<header>
-					<h1>Harvestr</h1>
-					<p>A place to swap food that would other wise be wasted <a href="http://html5up.net">HTML5 UP</a></p>
-				</header>
-					<footer>
-					{% if current_user.is_anonymous() %}
-					    <a href="/login/facebook" class="button scrolly">Login with Facebook</a>
-					    		<a href="/howitworks" class="button scrolly">How It Works</a>
+		{% block entirepage %}
+		<header id="header" class="dark">
+			<ul class="navbar">
+			  <li><a href="#home">Home</a></li>
+			  <li><a href="#news">News</a></li>
+			  <li><a href="#contact">Contact</a></li>
+			  <li><a href="#about">About</a></li>
+			</ul>
 
-					{% else %}
-						Hello {{current_user.name}}! 
-						<a href="/profile" class="button scrolly">View Profile</a>
-						<a href="/logout" class="button scrolly">Log out</a>
-					{% endif %}
-					</footer>
-			</section>
-			{% block body %}{% endblock %}
-			
+			<h1 class="title">Harvestr</h1>
+				<p>A place to swap food that would otherwise be wasted</p>
+		</header>
+
+
+			{% block body %}...content well goes here...{% endblock %}
 		
+        {% endblock %}
 
 	</body>
 </html>

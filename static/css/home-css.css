@@ -1,0 +1,13 @@
+
+body {
+		margin: 0;
+		background-image: url('../images/homeheader.jpg');
+		background-position:		top left,							center center;
+		background-repeat:			no-repeat;
+		background-size:			cover;
+		text-align: center;
+		padding: 14em 0 14em 0;
+		color: #fff;
+		opacity: 0.8;
+
+}
