@@ -1,97 +1,52 @@
-<!DOCTYPE HTML>
-<!--
-	Tessellate by HTML5 UP
-	html5up.net | @n33co
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Harvestr</title>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="description" content="" />
-		<meta name="keywords" content="" />
-		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
-		<script src="static/js/jquery.min.js"></script>
-		<script src="static/js/jquery.scrolly.min.js"></script>
-		<script src="static/js/skel.min.js"></script>
-		<script src="static/js/init.js"></script>
-		<noscript>
-			<link rel="stylesheet" href="static/css/skel.css" />
-			<link rel="stylesheet" href="static/css/style.css" />
-			<link rel="stylesheet" href="static/css/style-wide.css" />
-			<link rel="stylesheet" href="static/css/harvester.css" />
-		</noscript>
-		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
-		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
-	</head>
-	<style>
-	#filtertext {
-	    color: black;}
-	#distance {
-		display: inline-block;
-		text-align: center;
-	}
-	#swapimage {
-		border: solid;
-	}
-	</style>
-	<body>
+{% extends "base.html" %}
 
-		<!-- Header -->
-			<section id="header" class="main" class="dark">
-				<header id="filtertext">
-					<h1>Filter</h1>
-					<p>I want to harvest within:</p>
-					<form method="post" id="filter" action="/editprofile" enctype="multipart/form-data">
-						 <div id="distance" class="4u">
-						 	<select name="distance">
-								<option name="1 mile" value="1 mile">1 mile</option>
-								<option name="5 miles" value="5 miles">5 miles</option>
-								<option name="10 miles" value="10 miles">10 miles</option>
-								<option name="25 miles" value="25 miles">25 miles</option>
-								<option name="50 miles" value="50 miles">50 miles</option>
-							</select> 
-						</div>
+{% block body %}
 
 
-						<div>
-	  						<div><input class="harvest-checkbox" type="checkbox" name="Veggie" value="Veggie"> Veggie</div>
-							<div><input class="harvest-checkbox" type="checkbox" name="Fruit" value="Fruit" checked="checked"> Fruit</div>
-							<div><input class="harvest-checkbox" type="checkbox" name="prepicked" value="prepicked"> Prepicked</div>
-							<div><input class="harvest-checkbox" type="checkbox" name="Gifts" value="Gifts"> Gifts</div>
-						</div>
+<section class="main" class="dark">
+	<header id="filtertext">
+		<h1>Filter</h1>
+		<p>I want to harvest within:</p>
+		<form id="filter" enctype="multipart/form-data">
+			 <div id="distance" class="4u">
+			 	<select name="distance">
+					<option name="1 mile" value="1 mile">1 mile</option>
+					<option name="5 miles" value="5 miles">5 miles</option>
+					<option name="10 miles" value="10 miles">10 miles</option>
+					<option name="25 miles" value="25 miles">25 miles</option>
+					<option name="50 miles" value="50 miles">50 miles</option>
+				</select> 
+			</div>
 
-						<input type="submit" id="harvest" value="Harvest!">
-					</form>
-					<div id="swapimage" class="6u"><a href="#" class="image fit"><img src="static/images/plums.jpg" alt="" width="42" height="auto" border="5"/></a></div>
-				</header>
-				
-				<footer>
-					<a href="/profile" class="button scrolly">Back to My Profile</a>
-				</footer>
-			
-			</section>
 
-	</body>
+			<div>
+				<div><input class="harvest-checkbox" type="checkbox" name="Veggie" value="Veggie"> Veggie</div>
+				<div><input class="harvest-checkbox" type="checkbox" name="Fruit" value="Fruit"> Fruit</div>
+				<div><input class="harvest-checkbox" type="checkbox" name="Other" value="Yes"> Other (ex: flowers) </div>
+				<div><input class="harvest-checkbox" type="checkbox" name="prepicked" value="prepicked"> Prepicked</div>
+				<div><input class="harvest-checkbox" type="checkbox" name="Gifts" value="Gifts"> Gifts</div>
+			</div>
+
+			<input type="submit" id="harvest" value="Harvest!">
+		</form>
+		<div id="swapimage" class="6u"><a href="#" class="image fit"><img src="static/images/plums.jpg" alt="" width="42" height="auto" border="5"/></a></div>
+	</header>
+	
+
+
+</section>
+
+
 	<script>
-		  $("#harvest").submit(function (event) {
+		  $("#harvest").click(function (event) {
 		  	event.preventDefault();
-		  	var $filter = $( this ),
-		  		url = $filter.attr( 'action'),
-		  		checked = {};
-		  		$(".harvest-checkbox").each(function( index ) {
-		  			if $( this ).prop('checked') {
-		  				checked.$(this).name() = true
-		  		})
-		  		
-		  			
-		  		}
-		  		
-		  	var posting = $.post( url, { distance: $('#distance').val(), veggie: $('#veggie'), })
-		  	}
-		    $("#filter").serializeArray();
-		    console.log(url);
-		    $("#filter-result").load(url);
+		  	console.log("CLICK!");
+			console.log($("input:checked"));
+		  	
+		  	// TO DO:
+		  	// send which were checked to route -- get
+		  	// route to do logic and send back json
+
 		  })
 	</script>
-</html>
+{% endblock %}

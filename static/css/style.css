@@ -825,7 +825,7 @@
 		background-size:			auto,								cover;
 		background-position:		top left,							center center;
 		background-repeat:			repeat,								no-repeat;
-		/*padding: 14em 0 14em 0;*/
+		padding: 14em 0 14em 0;
 		text-align: center;
 		color: #fff;
 		opacity: 0.8;
@@ -910,7 +910,7 @@
 			
 			.main > .content.style1
 			{
-				background:	url('images/bgtr.svg') top right no-repeat,
+				background:	url('/static/images/bananas.jpg') top right no-repeat,
 							url('images/bgbl.svg') bottom left no-repeat,
 							url('images/bgbl.svg') bottom left no-repeat,
 							url('images/overlay.png'),

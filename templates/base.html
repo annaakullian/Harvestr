@@ -34,10 +34,11 @@
 		{% block entirepage %}
 		<header id="header" class="dark">
 			<ul class="navbar">
-			  <li><a href="#home">Home</a></li>
-			  <li><a href="#news">News</a></li>
-			  <li><a href="#contact">Contact</a></li>
-			  <li><a href="#about">About</a></li>
+			  <li><a href="/">Home</a></li>
+			  <li><a href="/profile">Profile</a></li>
+			  <li><a href="/harvest">Harvest</a></li>
+			  <li><a href="/howitworks">About</a></li>
+			  <li><a href="/logout">Logout</a></li>
 			</ul>
 
 			<h1 class="title">Harvestr</h1>
@@ -45,7 +46,7 @@
 		</header>
 
 
-			{% block body %}...content well goes here...{% endblock %}
+			{% block body %}{% endblock %}
 		
         {% endblock %}
 

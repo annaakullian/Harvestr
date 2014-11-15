@@ -2,101 +2,86 @@
 
 {% block body %}
 
-		<section id="first" class="main">
-				
-				<div class="content dark style1 featured">
-					
+		
+<section id="first" class="main">
 
-				<header>
-					<h1>{{ current_user.name }}'s Profile</h1>
-				</header>
-				<footer>
-					<a href="/editprofile" class="button scrolly">Edit Profile</a><br>
 
-					<br><a href="/harvest" class="button scrolly">Harvest</a><br>
+<div class="content dark style1 featured">
+	<div class="container">
+		<header>
+	<h1>{{ current_user.name }}'s Profile</h1>
+	<a href="/editprofile" class="button scrolly">Edit Your Profile</a>
+</header>
+		<p>
+			Address: {{current_user.location}}<br>
+			Exact Location: {{current_user.longitude}} {{current_user.latitude}}<br>
+			Email: {{current_user.email}}</p>
 
-					<br><a href="/" class="button scrolly">Logout</a>
-				</footer>
 			
-		
-	</div>
-</section>
-		
-		<!-- First -->
-			<section id="first" class="main">
-				
-				<div class="content dark style1 featured">
-					<div class="container">
-						<p>
-							Address: {{current_user.location}}<br>
-							Exact Location: {{current_user.longitude}} {{current_user.latitude}}<br>
-							Email: {{current_user.email}}</p>
-
-							
-							
-							<div class="row">
-							<div class="12u">
-								<section> 
-									<span class="feature-icon"><span class="icon fa-leaf"></span></span>
-									<header>
-										<h3>{{current_user.name}}'s OPEN ITEMS:</h3>
-									</header>
-										<p>check out all of your items!</p>
-								</section>
-							</div>
-							{% for photo in current_user.items %}
-								{% for attribute in photo.itemsattributes %}
-									{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
-									<div class="column">
-										<div class="12u">
-											<section>
-												<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
-											</section>
-										</div>
-									</div>
-									{% endif %}
-								{% endfor %}
-							{% endfor %}
-
-							<div class="column">
-							<div class="12u">
-								<footer>
-									<a href="/alluserimages" class="button scrolly">View all items</a>
-								</footer>
-							</div>
+			
+			<div class="row">
+			<div class="12u">
+				<section> 
+					<span class="feature-icon"><span class="icon fa-leaf"></span></span>
+					<header>
+						<h3>{{current_user.name}}'s OPEN ITEMS:</h3>
+					</header>
+						<p>check out all of your items!</p>
+				</section>
+			</div>
+			{% for photo in current_user.items %}
+				{% for attribute in photo.itemsattributes %}
+					{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
+					<div class="column">
+						<div class="12u">
+							<section>
+								<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
+							</section>
 						</div>
-						
+					</div>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
 
-				<div class="row">
-							<div class="12u">
-								<section> 
-									<span class="feature-icon"><span class="icon fa-puzzle-piece"></span></span>
-									<header>
-										<h3>YOUR CURRENT MATCHES:</h3>
-									</header>
-										<p>check out all of your matches!</p>
-								</section>
-							</div>
-							{% for photo in current_user.items %}
-								{% for attribute in photo.itemsattributes %}
-									{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
-									<div class="column">
-										<div class="12u">
-											<section>
-												<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
-											</section>
-										</div>
-									</div>
-									{% endif %}
-								{% endfor %}
-							{% endfor %}	
+			<div class="column">
+			<div class="12u">
+				<footer>
+					<a href="/alluserimages" class="button scrolly">View all items</a>
+				</footer>
+			</div>
+		</div>
+		
 
-							<div class="column">
-							<div class="12u">
-								<footer>
-									<a href="/alluserimages" class="button scrolly">View all Matches</a>
-								</footer>
-							</div>
-						</div>		
+<div class="row">
+			<div class="12u">
+				<section> 
+					<span class="feature-icon"><span class="icon fa-puzzle-piece"></span></span>
+					<header>
+						<h3>YOUR CURRENT MATCHES:</h3>
+					</header>
+						<p>check out all of your matches!</p>
+				</section>
+			</div>
+			{% for photo in current_user.items %}
+				{% for attribute in photo.itemsattributes %}
+					{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
+					<div class="column">
+						<div class="12u">
+							<section>
+								<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
+							</section>
+						</div>
+					</div>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}	
+
+			<div class="column">
+			<div class="12u">
+				<footer>
+					<a href="/alluserimages" class="button scrolly">View all Matches</a>
+				</footer>
+			</div>
+		</div>		
 				
 {% endblock %}

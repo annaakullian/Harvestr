@@ -8,6 +8,10 @@ from authomatic import Authomatic
 import os
 import requests 
 from model import User, Item, ItemAttribute, session as dbsession
+import json
+from sqlalchemy.orm import joinedload
+from sqlalchemy import  or_
+from sqlalchemy.sql import exists
 
 
 from authomatic_config import AUTHOMATIC_CONFIG
@@ -275,7 +279,59 @@ def uploaded_file(filename):
 def harvest():
 	return render_template("harvest.html", key=key)
 
+# /harvest-filter?veggie=veggie&fruit=fruit     not in here prepicked   not in gift
 
+@app.route('/harvest-filter')
+def filter():
+	veggie = request.args.get('veggie')
+	other = request.args.get('other')
+	fruit = request.args.get('fruit')
+	checked_prepicked = request.args.get('prepicked')
+	checked_gift = request.args.get('gift')
+
+	# base query of all items by date added  (FIXME: reverse)
+	query = dbsession.query(Item).order_by(Item.date_item_added)
+	# print len(query.all())
+	# ... but not things we offer
+	query = query.filter(Item.user_id != current_user.id)
+
+	forv_list = []
+	if veggie:
+		forv_list.append('veggie')
+	if fruit:
+		forv_list.append('fruit')
+	if other:
+		forv_list.append('other')
+
+	if checked_gift:
+		query = query.filter(exists().where(ItemAttribute.item_id == Item.id)
+                                     .where(ItemAttribute.attribute_name=='gift')
+                                     .where(ItemAttribute.attribute_value=='yes')
+                                     )
+
+	if checked_prepicked:
+		query = query.filter(exists().where(ItemAttribute.item_id == Item.id)
+                                     .where(ItemAttribute.attribute_name=='prepicked')
+                                     .where(ItemAttribute.attribute_value=='yes')
+                                     )
+
+	if forv_list:
+		query = query.filter(exists().where(ItemAttribute.item_id == Item.id)
+	                                 .where(ItemAttribute.attribute_name=='forv')
+	                                 .where(ItemAttribute.attribute_value.in_(forv_list))
+	                                 )
+			
+	# TODO: add filter for distance
+	harvest_items = query.all()
+	# fruits = [ Fruit(name=n, color=c), Fruit(name=n, color=c) ]
+	# stuff_to_return = [ {'name': f.name, 'color': f.color } for f in fruits ]
+	# stuff_to_return == [ { 'name': f1n, 'color': f1c }, { 'name': f2n, 'color': f2c } ]
+	# turn that into json
+	to_return = [ {'photo': f.photo_path, 'description': f.description} for f in harvest_items] 
+	json.dumps(to_return)
+	# print len(query.all())
+	return json.dumps(to_return) 
+	
 
 
 if __name__ == '__main__':

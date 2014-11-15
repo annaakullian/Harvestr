@@ -2,29 +2,31 @@
 
 {% block body %}
 
-<div class="12u">
-		<section> 
-			<span class="feature-icon"><span class="icon fa-leaf"></span></span>
-			<header>
-				<h3>{{ current_user.name }}'s' OPEN ITEMS:</h3>
-			</header>
-				<p>check out all of your items!</p>
-		</section>
+
+<section id="first" class="main">
+	<div class="content dark style1 featured">
+		<div class="container">
+
+			<div class="row"
+				<div class="12u">
+						<section> 
+							<span class="feature-icon"><span class="icon fa-leaf"></span></span>
+							<header>
+								<h3>{{ current_user.name }}'s' OPEN ITEMS:</h3>
+							</header>
+								<p>check out all of your items!</p>
+						</section>
+			</div>
+
+		</div>
+		{% for photo in current_user.items %}
+		
+		<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
+
+		{% endfor %}
 	</div>
+</section>
 
-	
-	{% for photo in current_user.items %}
-	
-	<div class="fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
-
-	{% endfor %}
-
-<div class="row">
-	<div class="12u">
-		<footer>
-			<a href="/profile" class="button scrolly">Back to Profile</a>
-		</footer>
-	</div>
-</div>
 
 {% endblock %}
+

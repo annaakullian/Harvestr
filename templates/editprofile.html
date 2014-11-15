@@ -1,40 +1,6 @@
-<!DOCTYPE HTML>
-<!--
-	Tessellate by HTML5 UP
-	html5up.net | @n33co
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>		
-		<title>Harvestr</title>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="description" content="" />
-		<meta name="keywords" content="" />
-		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
-		<!-- // <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>  -->
-		<script src="static/js/jquery.min.js"></script>
-		<script src="static/js/jquery.scrolly.min.js"></script>
-		<script src="static/js/skel.min.js"></script>
-		<script src="static/js/init.js"></script>
-		
-		
-		<!-- // <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script> -->
-		<!-- // <script src="static/js/geocode.js"></script> -->
-		
+{% extends "base.html" %}
 
-		
-		<!-- // <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script> -->
-		
-
-		<noscript>
-			<link rel="stylesheet" href="static/css/skel.css" />
-			<link rel="stylesheet" href="static/css/style.css" />
-			<link rel="stylesheet" href="static/css/style-wide.css" />
-		</noscript>
-		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
-		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
-	
-	
+{% block body %}
 
 
 	</head>
@@ -50,22 +16,7 @@
 	
 	</style>
 
-	<body>
-		<!-- Header -->
-		
-		
 
-			<section id="header" class="dark">
-				<header>
-					<h1>Edit Your Profile!</h1>
-					<p>Here is your profile </p>
-				</header>
-				<footer>
-					<a href="#first" class="button scrolly">Proceed to second phase</a>
-				</footer>
-			</section>
-			
-		<!-- First -->
 		<section id="fourth" class="main">
 				<header>
 					 {% with messages = get_flashed_messages() %}
@@ -322,5 +273,5 @@
 
 									 </script>
 
-	</body>
+	{% endblock %}
 </html>
