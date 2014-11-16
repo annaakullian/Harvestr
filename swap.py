@@ -12,6 +12,8 @@ import json
 from sqlalchemy.orm import joinedload
 from sqlalchemy import  or_
 from sqlalchemy.sql import exists
+from math import sin, cos, sqrt, atan2, radians
+
 
 
 from authomatic_config import AUTHOMATIC_CONFIG
@@ -279,15 +281,14 @@ def uploaded_file(filename):
 def harvest():
 	return render_template("harvest.html", key=key)
 
-# /harvest-filter?veggie=veggie&fruit=fruit     not in here prepicked   not in gift
-
+# /harvest-filter?veggie=veggie&fruit=fruit     
 @app.route('/harvest-filter')
 def filter():
-	veggie = request.args.get('veggie')
-	other = request.args.get('other')
-	fruit = request.args.get('fruit')
-	checked_prepicked = request.args.get('prepicked')
-	checked_gift = request.args.get('gift')
+	veggie = request.args.get('Veggie')
+	other = request.args.get('Other')
+	fruit = request.args.get('Fruit')
+	checked_prepicked = request.args.get('Prepicked')
+	checked_gift = request.args.get('Gift')
 
 	# base query of all items by date added  (FIXME: reverse)
 	query = dbsession.query(Item).order_by(Item.date_item_added)
@@ -327,10 +328,45 @@ def filter():
 	# stuff_to_return = [ {'name': f.name, 'color': f.color } for f in fruits ]
 	# stuff_to_return == [ { 'name': f1n, 'color': f1c }, { 'name': f2n, 'color': f2c } ]
 	# turn that into json
-	to_return = [ {'photo': f.photo_path, 'description': f.description} for f in harvest_items] 
-	json.dumps(to_return)
+	to_filter = [ {'photo': f.photo_path, 'description': f.description, 'latitude': f.user.latitude, 'longitude':f.user.longitude} for f in harvest_items] 
+	
+	#radians?
+	R = 6373.0
+
+	user_longitude = current_user.longitude
+	user_latitude = current_user.latitude
+	lat2 = radians(user_latitude)
+	lon2 = radians(user_longitude)
+
+	distance = request.args.get('distance')
+	distance = distance.split()
+	miles_desired = int(distance[0])
+
+	to_return = []
+
+	for item in to_filter:
+		item_latitude = (item['latitude'])
+		item_longitude = (item['longitude'])
+
+		lat1 = radians(item_latitude)
+		lon1 = radians(item_longitude)
+
+		dlon = lon2 - lon1
+		dlat = lat2 - lat1
+		a = (sin(dlat/2))**2 + cos(lat1) * cos(lat2) * (sin(dlon/2))**2
+		c = 2 * atan2(sqrt(a), sqrt(1-a))
+		distance = R * c
+		distance_miles = distance*0.621371
+		# print distance_miles
+		if distance_miles<=miles_desired:
+			to_return.append(item)
+
+	# json.dumps(to_filter)
 	# print len(query.all())
-	return json.dumps(to_return) 
+	# return json.dumps(to_filter)
+	#distance=1+mile&fruit=
+
+	return render_template("harvest-result.html", to_return = to_return) 
 	
 
 

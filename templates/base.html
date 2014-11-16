@@ -30,16 +30,24 @@
 		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
 	</head>
 	<body>
-
 		{% block entirepage %}
-		<header id="header" class="dark">
-			<ul class="navbar">
-			  <li><a href="/">Home</a></li>
-			  <li><a href="/profile">Profile</a></li>
-			  <li><a href="/harvest">Harvest</a></li>
-			  <li><a href="/howitworks">About</a></li>
-			  <li><a href="/logout">Logout</a></li>
-			</ul>
+			{% if current_user.is_anonymous() %}
+				<header id="header" class="dark">
+					<ul class="navbar">
+					  <li><a href="/">Home</a></li>
+					  <li><a href="/howitworks">About</a></li>
+					  <li><a href="/login/facebook">Login</a></li>
+					</ul>
+			{% else %}
+				<header id="header" class="dark">
+					<ul class="navbar">
+					  <li><a href="/">Home</a></li>
+					  <li><a href="/profile">Profile</a></li>
+					  <li><a href="/harvest">Harvest</a></li>
+					  <li><a href="/howitworks">About</a></li>
+					  <li><a href="/logout">Logout</a></li>
+					</ul>
+			{% endif %}
 
 			<h1 class="title">Harvestr</h1>
 				<p>A place to swap food that would otherwise be wasted</p>

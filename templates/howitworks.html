@@ -1,42 +1,8 @@
-<!DOCTYPE HTML>
-<!--
-	Tessellate by HTML5 UP
-	html5up.net | @n33co
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Tessellate by HTML5 UP</title>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="description" content="" />
-		<meta name="keywords" content="" />
-		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
-		<script src="static/js/jquery.min.js"></script>
-		<script src="static/js/jquery.scrolly.min.js"></script>
-		<script src="static/js/skel.min.js"></script>
-		<script src="static/js/init.js"></script>
-		<noscript>
-			<link rel="stylesheet" href="static/css/skel.css" />
-			<link rel="stylesheet" href="static/css/style.css" />
-			<link rel="stylesheet" href="static/css/style-wide.css" />
-		</noscript>
-				<link rel="stylesheet" href="static/css/harvester.css" />
+{% extends "base.html" %}
 
-		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
-		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
-	</head>
-	<body>
+{% block body %}
 
-		<!-- Header -->
-			<header id="header" class="dark">
-			<ul class="navbar">
-			  <li><a href="/">Home</a></li>
-			  <li><a href="/login/facebook">Login</a></li>
-			</ul>
-
-			<h1 class="title">Harvestr</h1>
-				<p>A place to swap food that would otherwise be wasted</p>
-		</header>
+		
 			
 		<!-- First -->
 			<section id="first" class="main">
@@ -421,6 +387,4 @@
 					</ul>
 				</div>
 			</section>
-
-	</body>
-</html>
+{% endblock %}

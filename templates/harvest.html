@@ -29,7 +29,7 @@
 
 			<input type="submit" id="harvest" value="Harvest!">
 		</form>
-		<div id="swapimage" class="6u"><a href="#" class="image fit"><img src="static/images/plums.jpg" alt="" width="42" height="auto" border="5"/></a></div>
+		<div id="harvest-result"> </div>
 	</header>
 	
 
@@ -40,13 +40,13 @@
 	<script>
 		  $("#harvest").click(function (event) {
 		  	event.preventDefault();
-		  	console.log("CLICK!");
-			console.log($("input:checked"));
-		  	
-		  	// TO DO:
-		  	// send which were checked to route -- get
-		  	// route to do logic and send back json
+		  	// console.log("CLICK!");
+			// console.log($("input:checked"));
+			console.log($("#filter").serialize());
+			var url = "/harvest-filter?" + $("#filter").serialize();
+			$("#harvest-result").load(url);
+  })
 
-		  })
+		  
 	</script>
 {% endblock %}
