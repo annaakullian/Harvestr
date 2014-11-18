@@ -29,8 +29,9 @@
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
 	</head>
-	<body>
+	<body style="font-family:Cassandre Graphika;" >
 		{% block entirepage %}
+
 			{% if current_user.is_anonymous() %}
 				<header id="header" class="dark">
 					<ul class="navbar">
@@ -51,6 +52,7 @@
 
 			<h1 class="title">Harvestr</h1>
 				<p>A place to swap food that would otherwise be wasted</p>
+				When life gives you lemons...
 		</header>
 
 

@@ -29,7 +29,12 @@
 
 			<input type="submit" id="harvest" value="Harvest!">
 		</form>
-		<div id="harvest-result"> </div>
+		<div id="harvest-result"> 
+           	<input type="submit" id="yes" value="Like!"> 
+           	<img id="current-image" src = "" alt="item" height=auto width="400"/> 
+           	<input type="submit" id="no" value="Nope!"><br>
+           <h2>DESCRIPTION: </h2>
+		</div>
 	</header>
 	
 
@@ -38,15 +43,49 @@
 
 
 	<script>
-		  $("#harvest").click(function (event) {
+		var harvest_items=[];
+		var item_to_show;
+		$("#harvest-result").hide()
+
+		function show_first_harvest_item() {
+			item_to_show = harvest_items[0];
+			// console.log(i, item_to_show);
+			console.log(item_to_show);
+			$("#current-image").attr("src", item_to_show.photo);
+			$("#harvest-result h2").text(item_to_show.description);
+			$("#harvest-result").show();
+			harvest_items.shift();
+		}
+
+		$("#yes").click(function (event) {
+			event.preventDefault();
+			$.get("/decision/" + item_to_show.id, function () {
+				show_first_harvest_item();
+			} )
+		// })
+		// $("#no").click(function (event) {
+		// 	event.preventDefault();
+		// 	... show next item
+		// })
+
+		// $.(".decision").click(function () {
+		// 	$.post(save-u)
+		// }
+
+		$("#harvest").click(function (event) {
 		  	event.preventDefault();
 		  	// console.log("CLICK!");
 			// console.log($("input:checked"));
-			console.log($("#filter").serialize());
+			// console.log($("#filter").serialize());
 			var url = "/harvest-filter?" + $("#filter").serialize();
-			$("#harvest-result").load(url);
-  })
-
-		  
+			$.getJSON(url, function(harvest_items_from_filter) {
+				harvest_items = harvest_items_from_filter;
+				show_first_harvest_item();
+			})
+			// $("#harvest-result").load(url);
+		})
 	</script>
+
+
+
 {% endblock %}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, flash, redirect, Markup, url_for, send_from_directory, make_response
+from flask import Flask, render_template, request, session, flash, redirect, Markup, url_for, send_from_directory, make_response, jsonify
 from werkzeug import secure_filename
 import hashlib
 from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user
@@ -198,23 +198,24 @@ def get_user_info():
 	current_user.longitude = user_longitude
 	# current_user.email = user_email
 	current_user.location = user_location
-	dbsession.commit()
+	# dbsession.commit()
 
 	description_attribute = ['item_description']
 
 	item_descriptions = {}
-	for k,value in request.form.iteritems():
+	for k, value in request.form.iteritems():
 		if "-" not in k:
 			continue;
-		item_description,photo_id = k.split("-")
+		item_description, photo_id = k.split("-")
 		if item_description not in description_attribute:
 			continue
 		item_descriptions[photo_id] = value
 
 	for photo_id, item_description in item_descriptions.iteritems():
-		item = dbsession.query(Item).filter_by(id=photo_id).first()
+		#one instead of first because there is only one item by the unique id
+		item = dbsession.query(Item).filter_by(id=photo_id).one()
 		item.description = item_description
-		dbsession.commit()
+		# dbsession.commit()
 
 	#print "\n\n\n\n\n\n\n\nITEM",request.form
 
@@ -237,7 +238,7 @@ def get_user_info():
 		for key, value in photo_attributes.iteritems():
 			#if key == "forv":
 			attribute = dbsession.query(ItemAttribute).filter_by(item_id=photo_id).filter_by(attribute_name=key).first()
-			if attribute == None:
+			if attribute is None:
 				attribute = ItemAttribute(\
 					item_id = photo_id,\
 					attribute_name = key,\
@@ -245,7 +246,7 @@ def get_user_info():
 				dbsession.add(attribute)
 			else:
 				attribute.attribute_value = value
-			dbsession.commit()
+			# dbsession.commit()
 
 
 	uploaded_files = request.files.getlist("file[]")
@@ -259,16 +260,17 @@ def get_user_info():
 		filedata = photo.stream.read()
 		hash_id = hashlib.md5(filedata).hexdigest()
 		file_path = "/static/uploads/%s" % filename 
-		if dbsession.query(Item).filter_by(hash_id = hash_id).first():
+		if dbsession.query(Item).filter_by(hash_id=hash_id).first():
 			flash("This photo already exists! You can edit the information on your current photo")
 			return redirect(url_for('editprofile'))
 		else:
 			photo.stream.seek(0)
 			photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			filenames.append(filename)
-			item = Item(user_id = session['user_id'], photo_path = file_path, hash_id = hash_id)
+			item = Item(user_id=session['user_id'], photo_path=file_path, hash_id=hash_id)
 			dbsession.add(item)
-	  		dbsession.commit()
+	  		# dbsession.commit()
+	dbsession.commit()
 	return redirect("/profile")
 
 @app.route('/uploads/<filename>')
@@ -328,8 +330,8 @@ def filter():
 	# stuff_to_return = [ {'name': f.name, 'color': f.color } for f in fruits ]
 	# stuff_to_return == [ { 'name': f1n, 'color': f1c }, { 'name': f2n, 'color': f2c } ]
 	# turn that into json
-	to_filter = [ {'photo': f.photo_path, 'description': f.description, 'latitude': f.user.latitude, 'longitude':f.user.longitude} for f in harvest_items] 
-	
+	to_filter = [ {'id': f.id, 'photo': f.photo_path, 'description': f.description, 'latitude': f.user.latitude, 'longitude':f.user.longitude} for f in harvest_items] 
+
 	#radians?
 	R = 6373.0
 
@@ -357,17 +359,99 @@ def filter():
 		c = 2 * atan2(sqrt(a), sqrt(1-a))
 		distance = R * c
 		distance_miles = distance*0.621371
-		# print distance_miles
 		if distance_miles<=miles_desired:
 			to_return.append(item)
+	# print to_return
 
-	# json.dumps(to_filter)
+	# json.dumps(to_return)
 	# print len(query.all())
-	# return json.dumps(to_filter)
+	return json.dumps(to_return)
 	#distance=1+mile&fruit=
 
-	return render_template("harvest-result.html", to_return = to_return) 
+	# return render_template("harvest-result.html", to_return = to_return) 
+
+@app.route('/decision/<item_id>')
+def vote_yes(item_id):
+	current_user  
+
+	#the item that the current user is interested in. 
+	item_intersted = dbsession.query(Item).filter_by(item_id=item_id).one()
+	#the owner of the interested item
+	user_interested = item_interested.user_id 
+	#all user_interested items
+	user_intersted_items = dbsession.query(Item).filter_by(user_id = user_interested.id).all()
+	user_intersted_item_ids = []
+	for item in user_intersted_items:
+		user_intersted_item_ids.append(item.id)
+
+	current_user_items = dbsession.query(Item).filter_by(user_id=current_user.id)
+	current_user_item_ids = []
+	for item in current_user_items:
+		current_user_item_ids.append(item.id)
+
+	#find all moi of the current user
+	current_user_matchoffer_items = dbsession.query(MatchOfferItem).where(item_id.in_(current_user_item_ids))
+	if current_user_matchoffer_items:
+		#get the MOI ids for the current user
+		current_user_matchoffer_item_ids = []
+		for item in current_user_matchoffer_items:
+			current_user_matchoffer_item_ids.append(item.match_offer_id)
+		#what are the match offers of the user who's items the current user is intersted in 
+		user_interested_matchoffer_items = dbession.query(MatchOfferItem).where(item_id.in_(user_intersted_items))
+		if user_interested_matchoffer_items:
+			interested_user_matchoffer_item_ids = []
+			for item in interested_user_matchoffer_items:
+				interested_user_matchoffer_item_ids.append(item.match_offer_id)
+			interested_user_moii_tuple = tuple(interested_user_matchoffer_item_ids)
+			current_user_moii_tuple = tuple(current_user_matchoffer_item_ids)
+			common_matches = cmp(interested_user_moii_tuple, current_user_moii_tuple)
+			if common_matches:
+				first_common_match = common_matches[0]
+				match_offer =  dbsession.query(MatchOffer).filter(match_offer_id = first_common_match)
+				match_offer = MatchOffer(date_of_match = datetime(todays_date))
+
+	else:
+		random_item_from_user = dbsession.query(Item).filter_by(user_id = current_user.id).first()
+		match_offer = MatchOffer()
+		match_offer_id = match_offer.id
+		match_offer_item = MatchOfferItem(match_offer_id = match_offer_id, item_id = item_intersted.id)
+		match_offer_item = MatchOfferItem(match_offer_id = match_offer_id, item_id = random_item_from_user.id)
+
+	dbsession.commit()
 	
+	#first scenario: user likes an item, and the owner of that items
+	#has liked one of the current users items
+	
+	# item = voting-yes-on-this-item (joels figs)
+	# step1: has anna offered anything to joel already?
+	# find all moi's where owner-of-item (joel) 
+	#    and m.oid in (moi.oid with any item-belonging-to-anna)
+
+
+	#   (ie joel liked something of anna's and now she likes something of his)
+    # if so, it's a match!
+    # pick first of those matches and 
+    # put mo.date-of-match to now
+    # match_offer = MatchOffer()
+
+    
+	
+
+
+	# user = joel
+	# item = voting-yes-on-this-item (anna's pears)
+
+    # step2: no, so make an offer
+    # insert into mo:
+    #     null date
+    # insert into moi:
+    #     m.oid, item (pears)
+    #     m.oid, item (random thing of joel)
+    # (and now we wait for anna to offer to joel) 
+
+
+
+
 
 
 if __name__ == '__main__':
