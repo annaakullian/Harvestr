@@ -7,12 +7,13 @@ from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
 import os
 import requests 
-from model import User, Item, ItemAttribute, session as dbsession
+from model import User, Item, ItemAttribute, MatchOffer, MatchOfferItem, session as dbsession
 import json
 from sqlalchemy.orm import joinedload
 from sqlalchemy import  or_
 from sqlalchemy.sql import exists
 from math import sin, cos, sqrt, atan2, radians
+import datetime 
 
 
 
@@ -143,9 +144,26 @@ def how_it_works():
 
 @app.route('/profile')	
 def profile():
+	current_user_items = current_user.items
+	match_items = []
+	if current_user_items: 
+		current_user_item_ids = [i.id for i in current_user_items]
+		#get all items in match offer items were items belong to current user
+		match_offers_of_current_user = dbsession.query(MatchOfferItem).filter(MatchOfferItem.item_id.in_(current_user_item_ids)).all()
+		if match_offers_of_current_user:
+			match_offer_ids_of_current_user = [i.match_offer_id for i in match_offers_of_current_user]
+			for match_id in match_offer_ids_of_current_user:
+				match_offer = dbsession.query(MatchOffer).filter(MatchOffer.id == match_id, MatchOffer.date_of_match != None).first()
+				if match_offer:
+					match_item = dbsession.query(MatchOfferItem).filter_by(match_offer_id=match_id).filter(~MatchOfferItem.item_id.in_(current_user_item_ids)).one()
+					##item = dbsession.query(Item).filter_by(id=match_item.item_id).one()
+					item = match_item.item
+					match_items.append(item)
+
+
 	# user = dbsession.query(User).get(session['user_id'])
 	# item_dictionary = item_dictionary
-	return render_template("profile.html")
+	return render_template("profile.html", match_items=match_items)
 
 @app.route('/alluserimages', methods=['GET'])	
 def allimages():
@@ -371,54 +389,101 @@ def filter():
 	# return render_template("harvest-result.html", to_return = to_return) 
 
 @app.route('/decision/<item_id>')
-def vote_yes(item_id):
-	current_user  
-
+def vote_yes(item_id):  #, current_user_id
+	#harvestee = person whose item current user is interested in
+	# current_user  = dbsession.query(User).filter_by(id=current_user_id).one()
 	#the item that the current user is interested in. 
-	item_intersted = dbsession.query(Item).filter_by(item_id=item_id).one()
-	#the owner of the interested item
-	user_interested = item_interested.user_id 
-	#all user_interested items
-	user_intersted_items = dbsession.query(Item).filter_by(user_id = user_interested.id).all()
-	user_intersted_item_ids = []
-	for item in user_intersted_items:
-		user_intersted_item_ids.append(item.id)
+	item_interested = dbsession.query(Item).filter_by(id=item_id).one()
+	#all items of the harvestee
+	harvestee_items = item_interested.user.items
+	#the ids of the harvestee's items 
+	harvestee_item_ids = [i.id for i in harvestee_items]
+	#all items of current user
+	current_user_items = current_user.items
+	#item ids of current user's items
+	current_user_item_ids = [i.id for i in current_user_items]
+	#all match offer items of the current user
+	current_user_matchoffer_items = dbsession.query(MatchOfferItem).filter(MatchOfferItem.item_id.in_(current_user_item_ids)).all()
+	
+	found = False
 
-	current_user_items = dbsession.query(Item).filter_by(user_id=current_user.id)
-	current_user_item_ids = []
-	for item in current_user_items:
-		current_user_item_ids.append(item.id)
+	gift = dbsession.query(ItemAttribute).filter_by(item_id=item_interested.id).filter_by(attribute_name="gift").filter_by(attribute_value="yes").one()
+	if gift:
+		match_offer=MatchOffer(date_of_match=datetime.datetime.now())
+		match_offer_items=MatchOfferItem(item_id=item_interested.id, match_offer_id=match_offer.id)
+		dbsession.add(match_offer)
+		dbsession.add(match_offer_items)
+		found = True
+	#if current_user and harvestee have no common match offers already, found = false
+	
 
-	#find all moi of the current user
-	current_user_matchoffer_items = dbsession.query(MatchOfferItem).where(item_id.in_(current_user_item_ids))
-	if current_user_matchoffer_items:
+	#if current user has any match offers already
+	if not found and current_user_matchoffer_items:	
 		#get the MOI ids for the current user
-		current_user_matchoffer_item_ids = []
-		for item in current_user_matchoffer_items:
-			current_user_matchoffer_item_ids.append(item.match_offer_id)
-		#what are the match offers of the user who's items the current user is intersted in 
-		user_interested_matchoffer_items = dbession.query(MatchOfferItem).where(item_id.in_(user_intersted_items))
-		if user_interested_matchoffer_items:
-			interested_user_matchoffer_item_ids = []
-			for item in interested_user_matchoffer_items:
-				interested_user_matchoffer_item_ids.append(item.match_offer_id)
-			interested_user_moii_tuple = tuple(interested_user_matchoffer_item_ids)
-			current_user_moii_tuple = tuple(current_user_matchoffer_item_ids)
-			common_matches = cmp(interested_user_moii_tuple, current_user_moii_tuple)
-			if common_matches:
-				first_common_match = common_matches[0]
-				match_offer =  dbsession.query(MatchOffer).filter(match_offer_id = first_common_match)
-				match_offer = MatchOffer(date_of_match = datetime(todays_date))
+		current_user_matchoffer_item_ids = [i.match_offer_id for i in current_user_matchoffer_items]
+		#what are the match offers harvestee
+		harvestee_matchoffer_items = dbsession.query(MatchOfferItem).filter(MatchOfferItem.item_id.in_(harvestee_item_ids)).all()
 
-	else:
-		random_item_from_user = dbsession.query(Item).filter_by(user_id = current_user.id).first()
-		match_offer = MatchOffer()
-		match_offer_id = match_offer.id
-		match_offer_item = MatchOfferItem(match_offer_id = match_offer_id, item_id = item_intersted.id)
-		match_offer_item = MatchOfferItem(match_offer_id = match_offer_id, item_id = random_item_from_user.id)
+		if harvestee_matchoffer_items:
+			harvestee_matchoffer_item_ids = [i.match_offer_id for i in harvestee_matchoffer_items]
+
+			#the common matches between the current user and the harvestee
+			common_matches = set(harvestee_matchoffer_item_ids) & set(current_user_matchoffer_item_ids)
+
+			if common_matches:
+				common_matches = list(common_matches)
+				first_common_match = common_matches[0]
+				match_offer = dbsession.query(MatchOffer).filter_by(id=first_common_match).first()
+				match_offer.date_of_match = datetime.datetime.now()
+				found = True
+
+	# else: if harvestee has not liked anything from current_user yet...
+	if not found:
+		#if the item is a gift, its an automatic match
+		random_item_from_user = dbsession.query(Item).filter_by(user_id=current_user.id).first()
+		if random_item_from_user:
+			match_offer = MatchOffer(match_offer_items=[
+			MatchOfferItem(item_id=item_interested.id),
+			MatchOfferItem(item_id=random_item_from_user.id)
+			])
+			dbsession.add(match_offer)
 
 	dbsession.commit()
+	return ""
+
+    
+
+		# user = joel
+		# item = voting-yes-on-this-item (anna's pears)
+
+	    # step2: no, so make an offer
+	    # insert into mo:
+	    #     null date
+	    # insert into moi:
+	    #     m.oid, item (pears)
+	    #     m.oid, item (random thing of joel)
+	    # (and now we wait for anna to offer to joel) 
 	
+	#the owner of the interested item
+	# harvestee = item_interested.user_id 
+	# #all harvestee items
+	# user_intersted_items = dbsession.query(Item).filter_by(user_id = harvestee.id).all()
+
+
+	# harvestee_item_ids = []
+	# for item in harvestee_items:
+	# 	user_intersted_item_ids.append(item.id)
+
+
+	# current_user_items = dbsession.query(Item).filter_by(user_id=current_user.id)
+	
+
+	# current_user_item_ids = []
+	# for item in current_user_items:
+	# 	current_user_item_ids.append(item.id)
+
+	## same could use list comp here
+
 	#first scenario: user likes an item, and the owner of that items
 	#has liked one of the current users items
 	
@@ -433,24 +498,6 @@ def vote_yes(item_id):
     # pick first of those matches and 
     # put mo.date-of-match to now
     # match_offer = MatchOffer()
-
-    
-	
-
-
-	# user = joel
-	# item = voting-yes-on-this-item (anna's pears)
-
-    # step2: no, so make an offer
-    # insert into mo:
-    #     null date
-    # insert into moi:
-    #     m.oid, item (pears)
-    #     m.oid, item (random thing of joel)
-    # (and now we wait for anna to offer to joel) 
-
-
-
 
 
 

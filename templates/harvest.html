@@ -62,15 +62,11 @@
 			$.get("/decision/" + item_to_show.id, function () {
 				show_first_harvest_item();
 			} )
-		// })
-		// $("#no").click(function (event) {
-		// 	event.preventDefault();
-		// 	... show next item
-		// })
-
-		// $.(".decision").click(function () {
-		// 	$.post(save-u)
-		// }
+		})
+		$("#no").click(function (event) {
+			event.preventDefault();
+			show_first_harvest_item();
+		})
 
 		$("#harvest").click(function (event) {
 		  	event.preventDefault();
