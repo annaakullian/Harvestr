@@ -38,7 +38,11 @@
 							
 							<div class="row half">
 								<div class="6u"><input type="text" name="user_name" value="{{ current_user.name}}" placeholder="Name"/></div>
-								<div class="6u"><input type="text" name= "user_location" value="{{ current_user.location}}" placeholder="Location" /></div>
+								{%if current_user.location == None %}
+									<div class="6u"><input type="text" name= "user_location" placeholder="Location" /></div>
+								{% else %}
+									<div class="6u"><input type="text" name= "user_location" value="{{ current_user.location}}" placeholder="Location" /></div>
+								{% endif %}
 								
 					
 				<p>&nbsp;</p>
@@ -84,11 +88,44 @@
 								
 								<div class="12u">
 									<p> add a photo of what you'd like to trade </p>
-									<div id="dynamicInput">
-								          Item 1<br><input type="file" name="file[]">
+									<div id="new_items_placeholder"></div>
 
-								     </div>
-								     <input type="button" value="Add another item to Harvest" onClick="addInput('dynamicInput');">
+										<div id="new_item_info" class="hidden">
+											<div id="dynamicInput">
+										          Item 1<br><input type="file" name="file[]">
+										    </div>				
+											Fruit or Veggie?
+											<select name="forv_new[]">
+												{% for option in ["fruit", "veggie", "other"] %}		
+													<option value= "{{ option }}">{{option | capitalize}}
+												{% endfor %}</option>
+											</select>
+											Open or Closed?
+											<select name="status_new[]">
+												{% for option in ["open", "closed"] %}
+													<option value="{{ option }}">{{option | capitalize}}
+													{% endfor %}</option>
+											</select>
+											Gift?
+											<select name="gift_new[]">
+												{% for option in ["yes", "no"] %}
+													<option value="{{ option }}">{{option | capitalize}}
+													{% endfor %}</option>
+											</select>
+											Prepicked?
+											<select name="prepicked_new[]">
+												{% for option in ["yes", "no"] %}
+													<option value="{{ option }}">{{option | capitalize}}
+												{% endfor %}</option>
+											</select>
+											Add a short description of your item below.
+											<div><input name= "description_new[]" type="text" placeholder="Item Description"/></div>
+										</div>
+								</div>
+
+								      </div>
+
+								     <input type="button" id="new_item" value="Add another item to Harvest">
 
 								</div>
 							</div>
@@ -237,9 +274,16 @@
 					</ul>
 				</div>
 			</section>
-
+						
 		
 								      <script>
+								      $("#new_item").click(function() {
+								      	$("#new_item_info").clone().appendTo("#new_items_placeholder").removeClass("hidden");
+								      	
+								      });
+
+
+
 										var counter = 1;
 										var limit = 5;
 										function addInput(divName){

@@ -174,6 +174,8 @@ def allimages():
 @app.route('/editprofile', methods=['GET'])
 def editprofile():
 	# user = dbsession.query(User).get(session['user_id'])
+	print "Current user", current_user
+	print "Current location", current_user.location
 	items_attribute_dictionary = {}
 	items = current_user.items
 	for item in items:
@@ -268,33 +270,69 @@ def get_user_info():
 
 
 	uploaded_files = request.files.getlist("file[]")
+
+	new_forvs = request.form.getlist("forv_new[]")
+	new_status = request.form.getlist("status_new[]")
+	new_gift = request.form.getlist("gift_new[]")
+	new_prepicked = request.form.getlist("prepicked_new[]")
+	new_description = request.form.getlist("description_new[]")
 	filenames = []
 
-	for photo in uploaded_files:
-		if photo.filename == '':
+	for i in range(len(uploaded_files)):
+		# print "\n\n\n\n\n\n\n\n\n\n",i, new_description, new_forvs
+		if uploaded_files[i].filename == '':
 			continue
 		# if file and allowed_file(file.filename):
-		filename = secure_filename(photo.filename)
-		filedata = photo.stream.read()
+		filename = secure_filename(uploaded_files[i].filename)
+		filedata = uploaded_files[i].stream.read()
 		hash_id = hashlib.md5(filedata).hexdigest()
 		file_path = "/static/uploads/%s" % filename 
 		if dbsession.query(Item).filter_by(hash_id=hash_id).first():
 			flash("This photo already exists! You can edit the information on your current photo")
 			return redirect(url_for('editprofile'))
 		else:
-			photo.stream.seek(0)
-			photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			uploaded_files[i].stream.seek(0)
+			uploaded_files[i].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			filenames.append(filename)
-			item = Item(user_id=session['user_id'], photo_path=file_path, hash_id=hash_id)
+			item = Item(user_id=session['user_id'], photo_path=file_path, hash_id=hash_id, description=new_description[i], date_item_added=datetime.datetime.now())
 			dbsession.add(item)
-	  		# dbsession.commit()
+	  		dbsession.commit()
+	  	forv_value = new_forvs[i]
+	  	status_value = new_status[i]
+	  	gift_value = new_gift[i]
+	  	prepicked_value = new_prepicked[i]
+
+	  	attribute = ItemAttribute(\
+					item_id = item.id,\
+					attribute_name = "forv",\
+					attribute_value = forv_value)
+		dbsession.add(attribute)
+
+		attribute = ItemAttribute(\
+					item_id = item.id,\
+					attribute_name = "status",\
+					attribute_value = status_value)
+		dbsession.add(attribute)
+
+		attribute = ItemAttribute(\
+					item_id = item.id,\
+					attribute_name = "gift",\
+					attribute_value = gift_value)
+		dbsession.add(attribute)
+
+		attribute = ItemAttribute(\
+					item_id = item.id,\
+					attribute_name = "prepicked",\
+					attribute_value = prepicked_value)
+		dbsession.add(attribute)
+
 	dbsession.commit()
+
 	return redirect("/profile")
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
 	return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
 
 
 @app.route('/harvest')
@@ -315,6 +353,12 @@ def filter():
 	# print len(query.all())
 	# ... but not things we offer
 	query = query.filter(Item.user_id != current_user.id)
+
+	#dont show items that the user has already said "yes" or "no" to
+	#i want to filter out all of the items 
+	#query = query.filter()
+	##create a new database called "viewed items". that has a backref: viewers + items viewed 
+
 
 	forv_list = []
 	if veggie:
@@ -341,7 +385,11 @@ def filter():
 	                                 .where(ItemAttribute.attribute_name=='forv')
 	                                 .where(ItemAttribute.attribute_value.in_(forv_list))
 	                                 )
-			
+	#filter out all closed items
+	query = query.filter(exists().where(ItemAttribute.item_id==Item.id)
+								 .where(ItemAttribute.attribute_name=='status')
+								 .where(ItemAttribute.attribute_value=='open')
+									)			
 	# TODO: add filter for distance
 	harvest_items = query.all()
 	# fruits = [ Fruit(name=n, color=c), Fruit(name=n, color=c) ]
@@ -393,7 +441,7 @@ def vote_yes(item_id):  #, current_user_id
 	#harvestee = person whose item current user is interested in
 	# current_user  = dbsession.query(User).filter_by(id=current_user_id).one()
 	#the item that the current user is interested in. 
-	item_interested = dbsession.query(Item).filter_by(id=item_id).one()
+	item_interested = dbsession.query(Item).filter_by(id=item_id).first()
 	#all items of the harvestee
 	harvestee_items = item_interested.user.items
 	#the ids of the harvestee's items 
@@ -407,11 +455,13 @@ def vote_yes(item_id):  #, current_user_id
 	
 	found = False
 
-	gift = dbsession.query(ItemAttribute).filter_by(item_id=item_interested.id).filter_by(attribute_name="gift").filter_by(attribute_value="yes").one()
+	gift = dbsession.query(ItemAttribute).filter_by(item_id=item_interested.id).filter_by(attribute_name="gift").filter_by(attribute_value="yes").first()
 	if gift:
 		match_offer=MatchOffer(date_of_match=datetime.datetime.now())
-		match_offer_items=MatchOfferItem(item_id=item_interested.id, match_offer_id=match_offer.id)
 		dbsession.add(match_offer)
+		dbsession.commit()
+		match_offer_copy = dbsession.query(MatchOffer).filter_by(date_of_match=match_offer.date_of_match).first()
+		match_offer_items=MatchOfferItem(item_id=item_interested.id, match_offer_id=match_offer_copy.id)
 		dbsession.add(match_offer_items)
 		found = True
 	#if current_user and harvestee have no common match offers already, found = false
@@ -439,7 +489,6 @@ def vote_yes(item_id):  #, current_user_id
 
 	# else: if harvestee has not liked anything from current_user yet...
 	if not found:
-		#if the item is a gift, its an automatic match
 		random_item_from_user = dbsession.query(Item).filter_by(user_id=current_user.id).first()
 		if random_item_from_user:
 			match_offer = MatchOffer(match_offer_items=[

@@ -5,6 +5,15 @@
 
 <section class="main" class="dark">
 	<header id="filtertext">
+		{% with messages = get_flashed_messages() %}
+				      {% if messages %}
+				        <ul class=flashes>
+				        {% for message in messages %}
+				            <p style = "color:red"><bold>{{ message }}</bold></p>
+				        {% endfor %}
+				        </ul>
+				      {% endif %}
+				    {% endwith %}  
 		<h1>Filter</h1>
 		<p>I want to harvest within:</p>
 		<form id="filter" enctype="multipart/form-data">
@@ -48,6 +57,10 @@
 		$("#harvest-result").hide()
 
 		function show_first_harvest_item() {
+			if (harvest_items.length == 0) {
+				alert("There are no more items in this search, consider expanding your filter, and harvest again!");
+				return; 
+			}
 			item_to_show = harvest_items[0];
 			// console.log(i, item_to_show);
 			console.log(item_to_show);

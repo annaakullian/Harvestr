@@ -57,3 +57,8 @@ header p
 				background:	url('/static/images/yellow.jpg') top right repeat,
 							linear-gradient(45deg, #b39c68, #a56365, #412e4c);
 			}
+
+.hidden {
+	visibility: hidden;
+	display: none;
+}
