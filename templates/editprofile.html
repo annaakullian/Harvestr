@@ -3,18 +3,11 @@
 {% block body %}
 
 
-	</head>
-	<style>
-	#harvestphoto {
-  		width:20%;
-  		height:auto;
-		}
 	<style type="text/css">
 	.wrapper, .actions { margin-bottom: 10px; padding: 5px; text-align:left; }
 	.actions { text-align: center; }
 	</style>
 	
-	</style>
 
 
 		<section id="fourth" class="main">
@@ -43,18 +36,11 @@
 								{% else %}
 									<div class="6u"><input type="text" name= "user_location" value="{{ current_user.location}}" placeholder="Location" /></div>
 								{% endif %}
-								
-					
-				<p>&nbsp;</p>
-
-				
-					<div>  
-						<h1><bold>Edit your Items</bold></h1>
-					</div>
+													
 				
 								{% for photo in current_user.items %}
 								<div>
-								<div id="harvestphoto" class="harvestphoto image fit"><img class="harvestphoto" src= "{{ photo.photo_path }}" alt=""/></div>
+								<div class="harvestphoto fit"><img src= "{{ photo.photo_path }}" alt=""/></div>
 									Fruit or Veggie?
 									<!-- <input type="hidden" name="item[{{ photo.id }}][]" value="{{ photo.id }}"> -->
 									<select name="forv-{{ photo.id }}">
@@ -70,7 +56,7 @@
 									</select>
 									Gift?
 									<select name="gift-{{ photo.id }}">
-										{% for option in ["yes", "no"] %}
+										{% for option in ["no", "yes"] %}
 											<option value="{{ option }}" {% if items_attribute_dictionary.get(photo.id, {}).get('gift') == option %} selected{% endif %}>{{option | capitalize}}
 											{% endfor %}</option>
 									</select>
@@ -87,7 +73,6 @@
 								{% endfor %}
 								
 								<div class="12u">
-									<p> add a photo of what you'd like to trade </p>
 									<div id="new_items_placeholder"></div>
 
 										<div id="new_item_info" class="hidden">
@@ -108,7 +93,7 @@
 											</select>
 											Gift?
 											<select name="gift_new[]">
-												{% for option in ["yes", "no"] %}
+												{% for option in ["no", "yes"] %}
 													<option value="{{ option }}">{{option | capitalize}}
 													{% endfor %}</option>
 											</select>
@@ -125,7 +110,7 @@
 
 								      </div>
 
-								     <input type="button" id="new_item" value="Add another item to Harvest">
+								     <input type="button" id="new_item" value="Add an item to trade">
 
 								</div>
 							</div>
@@ -146,117 +131,6 @@
 			</section>
 
 
-			<section id="first" class="main">
-				
-				<div class="content dark style1 featured">
-					<div class="container">
-						<div class="row">
-							<div class="4u">
-								<section>
-									<span class="feature-icon"><span class="icon fa-clock-o"></span></span>
-									<header>
-										<h3>Gravida</h3>
-									</header>
-									<p>Gravida dis placerat lectus ante vel nunc euismod est turpis sodales. 
-									Diam tempor dui lacinia accumsan vivamus. Gravida dis placerat lectus 
-									ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-									accumsan vivamus.</p>
-								</section>
-							</div>
-							<div class="4u">
-								<section>
-									<span class="feature-icon"><span class="icon fa-bolt"></span></span>
-									<header>
-										<h3>Vivamus</h3>
-									</header>
-									<p>Gravida dis placerat lectus ante vel nunc euismod est turpis sodales. 
-									Diam tempor dui lacinia accumsan vivamus. Gravida dis placerat lectus 
-									ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-									accumsan vivamus.</p>
-								</section>
-							</div>
-							<div class="4u">
-								<section>
-									<span class="feature-icon"><span class="icon fa-cloud"></span></span>
-									<header>
-										<h3>Accumsan</h3>
-									</header>
-									<p>Gravida dis placerat lectus ante vel nunc euismod est turpis sodales. 
-									Diam tempor dui lacinia accumsan vivamus. Gravida dis placerat lectus 
-									ante vel nunc euismod est turpis sodales. Diam tempor dui lacinia 
-									accumsan vivamus.</p>
-								</section>
-							</div>
-						</div>
-						<div class="row">
-							<div class="12u">
-								<footer>
-									<a href="#second" class="button scrolly">Gravida tempor lacinia</a>
-								</footer>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-		<!-- Second -->
-			<section id="second" class="main">
-				
-				<div class="content dark style2">
-					<div class="container">
-						<div class="row">
-							<div class="4u">
-								<section>
-									<h3>Augue vivamus sed ipsum commodo lorem dolor</h3>
-									<p>TEXT</p>
-									<footer>
-										<a href="#third" class="button scrolly">Accumsan nisi tempor</a>
-									</footer>
-								</section>
-							</div>
-							<div class="8u">
-								<div class="row no-collapse">
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic01.jpg" alt="" /></a></div>
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic02.jpg" alt="" /></a></div>
-								</div>
-								<div class="row no-collapse">
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic03.jpg" alt="" /></a></div>
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic04.jpg" alt="" /></a></div>
-								</div>
-								<div class="row no-collapse">
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic05.jpg" alt="" /></a></div>
-									<div class="6u"><a href="#" class="image fit"><img src="static/images/pic06.jpg" alt="" /></a></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			
-		<!-- Third -->
-			<section id="third" class="main">
-				
-				<div class="content dark style3">
-					<div class="container">
-						<span class="image featured"><img src="static/images/pic07.jpg" alt="" /></span>
-						<div class="row">
-							<div class="4u">
-								<h3>Diam vivamus turpis lorem sodales lectus ornare</h3>
-								<p>WOW</p>
-							</div>
-							<div class="4u">
-								<p>HELLO</p>
-							</div>
-							<div class="4u">
-								<p>HEY</p>
-								<footer>
-									<a href="#fourth" class="button scrolly">Ipsum ornare lorem dolor</a>
-								</footer>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
 			
 			
 		<!-- Footer -->

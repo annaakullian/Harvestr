@@ -8,7 +8,7 @@
 	font-size: 3em;
 }
 
-.harvestphoto {
+.harvestphoto img {
 	width:20%;
 	height:auto;
 	/*border-radius: 90%;*/
@@ -61,4 +61,10 @@ header p
 .hidden {
 	visibility: hidden;
 	display: none;
+}
+
+#anchor {
+	background-color: #ABFF8D;
+	border-radius: 5px;
+	color: black;
 }

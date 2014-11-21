@@ -7,15 +7,18 @@ from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
 import os
 import requests 
-from model import User, Item, ItemAttribute, MatchOffer, MatchOfferItem, session as dbsession
+from model import User, Item, ItemAttribute, MatchOffer, MatchOfferItem, ItemViewed, session as dbsession
 import json
 from sqlalchemy.orm import joinedload
 from sqlalchemy import  or_
 from sqlalchemy.sql import exists
 from math import sin, cos, sqrt, atan2, radians
 import datetime 
+# import smtplib
 
-
+# fromaddr = 'harvestr.swap@gmail.com'
+# toaddrs  = current_user.email
+# msg = 'Congratulations, you have a match with ?'
 
 from authomatic_config import AUTHOMATIC_CONFIG
 
@@ -38,7 +41,7 @@ authomatic = Authomatic(AUTHOMATIC_CONFIG, 'your secret string', report_errors=F
 
 key = os.environ.get("GOOGLE_MAPS_EMBED_KEY")
 
-#this is the home page
+#this is the home pagef
 @app.route('/')
 def home_page():
 	# user = dbsession.query(User).first()
@@ -72,6 +75,8 @@ def login(provider_name):
 
 			# Store the user in our session, logging them in 
 			login_user(user)
+			current_user.last_log_in = datetime.datetime.now()
+			dbsession.commit()
 
 		# Redirect somewhere after log in. In this case, the homepage
 		return redirect('/profile')
@@ -294,7 +299,7 @@ def get_user_info():
 			uploaded_files[i].stream.seek(0)
 			uploaded_files[i].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			filenames.append(filename)
-			item = Item(user_id=session['user_id'], photo_path=file_path, hash_id=hash_id, description=new_description[i], date_item_added=datetime.datetime.now())
+			item = Item(user_id=current_user.id, photo_path=file_path, hash_id=hash_id, description=new_description[i], date_item_added=datetime.datetime.now())
 			dbsession.add(item)
 	  		dbsession.commit()
 	  	forv_value = new_forvs[i]
@@ -353,6 +358,17 @@ def filter():
 	# print len(query.all())
 	# ... but not things we offer
 	query = query.filter(Item.user_id != current_user.id)
+
+	# query = query.filter(ViewedItem.viewer_id = current_user.id)
+
+	viewed_items = dbsession.query(ItemViewed).filter_by(viewer_id = current_user.id).all()
+	if viewed_items:
+		viewed_item_ids = []
+		for item in viewed_items:
+			viewed_item_ids.append(item.id)
+	else:
+		viewed_item_ids = []
+	query = query.filter(~Item.id.in_(viewed_item_ids))
 
 	#dont show items that the user has already said "yes" or "no" to
 	#i want to filter out all of the items 
@@ -436,11 +452,26 @@ def filter():
 
 	# return render_template("harvest-result.html", to_return = to_return) 
 
+@app.route('/decision_no/<item_id>')
+def vote_no(item_id):  #, current_user_id
+	#add item to the database as a viewed item
+	viewed_item = ItemViewed(decision="no", item_id=item_id, viewer_id=current_user.id, date_viewed=datetime.datetime.now())
+	dbsession.add(viewed_item)
+	dbsession.commit()
+	return ""
+
 @app.route('/decision/<item_id>')
 def vote_yes(item_id):  #, current_user_id
 	#harvestee = person whose item current user is interested in
 	# current_user  = dbsession.query(User).filter_by(id=current_user_id).one()
 	#the item that the current user is interested in. 
+
+	#add item to the database as a viewed item
+	message = ""
+	viewed_item = ItemViewed(decision="yes", item_id=item_id, viewer_id=current_user.id, date_viewed=datetime.datetime.now())
+	dbsession.add(viewed_item)
+	dbsession.commit()
+
 	item_interested = dbsession.query(Item).filter_by(id=item_id).first()
 	#all items of the harvestee
 	harvestee_items = item_interested.user.items
@@ -458,6 +489,7 @@ def vote_yes(item_id):  #, current_user_id
 	gift = dbsession.query(ItemAttribute).filter_by(item_id=item_interested.id).filter_by(attribute_name="gift").filter_by(attribute_value="yes").first()
 	if gift:
 		match_offer=MatchOffer(date_of_match=datetime.datetime.now())
+		message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly!"
 		dbsession.add(match_offer)
 		dbsession.commit()
 		match_offer_copy = dbsession.query(MatchOffer).filter_by(date_of_match=match_offer.date_of_match).first()
@@ -479,12 +511,14 @@ def vote_yes(item_id):  #, current_user_id
 
 			#the common matches between the current user and the harvestee
 			common_matches = set(harvestee_matchoffer_item_ids) & set(current_user_matchoffer_item_ids)
+			print "COMMON MATCHES", common_matches
 
 			if common_matches:
 				common_matches = list(common_matches)
 				first_common_match = common_matches[0]
 				match_offer = dbsession.query(MatchOffer).filter_by(id=first_common_match).first()
 				match_offer.date_of_match = datetime.datetime.now()
+				message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly!"
 				found = True
 
 	# else: if harvestee has not liked anything from current_user yet...
@@ -498,8 +532,8 @@ def vote_yes(item_id):  #, current_user_id
 			dbsession.add(match_offer)
 
 	dbsession.commit()
-	return ""
-
+	return json.dumps({"message": message})
+	
     
 
 		# user = joel

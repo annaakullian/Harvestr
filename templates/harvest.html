@@ -2,7 +2,6 @@
 
 {% block body %}
 
-
 <section class="main" class="dark">
 	<header id="filtertext">
 		{% with messages = get_flashed_messages() %}
@@ -14,6 +13,8 @@
 				        </ul>
 				      {% endif %}
 				    {% endwith %}  
+			<div id="message-container">
+			</div>	
 		<h1>Filter</h1>
 		<p>I want to harvest within:</p>
 		<form id="filter" enctype="multipart/form-data">
@@ -38,10 +39,10 @@
 
 			<input type="submit" id="harvest" value="Harvest!">
 		</form>
-		<div id="harvest-result"> 
-           	<input type="submit" id="yes" value="Like!"> 
+		<div id="harvest-result"><br>
+			<input type="submit" id="no" value="Nope!">
            	<img id="current-image" src = "" alt="item" height=auto width="400"/> 
-           	<input type="submit" id="no" value="Nope!"><br>
+           	<input type="submit" id="yes" value="Like!"><br>
            <h2>DESCRIPTION: </h2>
 		</div>
 	</header>
@@ -59,11 +60,11 @@
 		function show_first_harvest_item() {
 			if (harvest_items.length == 0) {
 				alert("There are no more items in this search, consider expanding your filter, and harvest again!");
+				$("#harvest-result").hide();
 				return; 
 			}
 			item_to_show = harvest_items[0];
 			// console.log(i, item_to_show);
-			console.log(item_to_show);
 			$("#current-image").attr("src", item_to_show.photo);
 			$("#harvest-result h2").text(item_to_show.description);
 			$("#harvest-result").show();
@@ -72,13 +73,21 @@
 
 		$("#yes").click(function (event) {
 			event.preventDefault();
-			$.get("/decision/" + item_to_show.id, function () {
+			$.get("/decision/" + item_to_show.id, function(message) {
 				show_first_harvest_item();
+				var message = JSON.parse(message);
+				$("#message-container").append("<div id='anchor'>"+ message.message+"</div>");
 			} )
 		})
+
 		$("#no").click(function (event) {
 			event.preventDefault();
-			show_first_harvest_item();
+			$.get("/decision_no/" + item_to_show.id, function(message) {
+				show_first_harvest_item();
+				var message = JSON.parse(message);
+				$("#message-container").append("<div id='anchor'>"+ message.message+"</div>");
+			})
+			
 		})
 
 		$("#harvest").click(function (event) {
@@ -90,7 +99,7 @@
 			$.getJSON(url, function(harvest_items_from_filter) {
 				harvest_items = harvest_items_from_filter;
 				show_first_harvest_item();
-			})
+			});
 			// $("#harvest-result").load(url);
 		})
 	</script>

@@ -25,7 +25,6 @@ class User(Base):
 	latitude = Column(Float, nullable = True)
 	longitude = Column(Float, nullable = True)
 	last_log_in = Column(DateTime, nullable = True)
-	password = Column(String(100), nullable=True)
 
 	# flask-login required methods for validating a user
 	# ==================================================
@@ -45,6 +44,19 @@ class User(Base):
 	# Check if a user is logged out (False for all User objects)
 	def is_anonymous(self):
 		return False
+
+#keeps track of all of the items a user has seen, whether or not they say "yes" or "no" to it
+class ItemViewed(Base):
+	__tablename__="itemsviewed"
+
+	id = Column(Integer, primary_key = True)
+	item_id = Column(Integer, ForeignKey('items.id'))
+	viewer_id = Column(Integer, ForeignKey('users.id'))
+	decision = Column(String(100), nullable = True)
+	date_viewed = Column(DateTime, nullable = True)
+
+	item =  relationship("Item", backref=backref("itemsviewed", order_by=id))
+	viewer = relationship("User", backref=backref("itemsviewed", order_by=id))
 
 
 #here are the items. each item is either available(T) or not (F), this will be a field that the user can control
@@ -76,10 +88,6 @@ class ItemAttribute(Base):
 
 	# attribute_type = relationship("Attribute", backref=backref("itemsattributes", order_by=id))
 	item = relationship("Item", backref=backref("itemsattributes", order_by=id))
-
- 	# def gift():
-	# 	#this function will see if the item is a gift, if it is, then the match 
-		# offer field will be marked as the user approves to start with	
 
 # these are the matches, connects two items which belong to two different users, once user1 and user2 approves, 
 # there will be a pop up that says "theres a match! and an email to both users"
