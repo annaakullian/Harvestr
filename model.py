@@ -102,9 +102,11 @@ class MatchOfferItem(Base):
 	id =  Column(Integer, primary_key = True)
 	match_offer_id = Column(Integer, ForeignKey('match_offers.id'))
 	item_id = Column(Integer, ForeignKey('items.id'))
+	user_id = Column(Integer, ForeignKey('users.id'))
 
 	match_offer = relationship("MatchOffer", backref=backref("match_offer_items", order_by=id))
 	item = relationship("Item", backref=backref("match_offer_items", order_by=id))
+	user = relationship("User", backref=backref("match_offer_items", order_by=id))
 
 # #these are the messages where the author is a user and a match id will show which two items it matches
 class Message(Base):

@@ -77,15 +77,13 @@
 				show_first_harvest_item();
 				var message = JSON.parse(message);
 				$("#message-container").append("<div id='anchor'>"+ message.message+"</div>");
-			} )
+			})
 		})
 
 		$("#no").click(function (event) {
 			event.preventDefault();
 			$.get("/decision_no/" + item_to_show.id, function(message) {
 				show_first_harvest_item();
-				var message = JSON.parse(message);
-				$("#message-container").append("<div id='anchor'>"+ message.message+"</div>");
 			})
 			
 		})

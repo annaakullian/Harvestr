@@ -366,9 +366,8 @@ def filter():
 		viewed_item_ids = []
 		for item in viewed_items:
 			viewed_item_ids.append(item.id)
-	else:
-		viewed_item_ids = []
-	query = query.filter(~Item.id.in_(viewed_item_ids))
+		query = query.filter(~Item.id.in_(viewed_item_ids))
+
 
 	#dont show items that the user has already said "yes" or "no" to
 	#i want to filter out all of the items 
@@ -493,7 +492,7 @@ def vote_yes(item_id):  #, current_user_id
 		dbsession.add(match_offer)
 		dbsession.commit()
 		match_offer_copy = dbsession.query(MatchOffer).filter_by(date_of_match=match_offer.date_of_match).first()
-		match_offer_items=MatchOfferItem(item_id=item_interested.id, match_offer_id=match_offer_copy.id)
+		match_offer_items = MatchOfferItem(item_id=item_interested.id, match_offer_id=match_offer_copy.id)
 		dbsession.add(match_offer_items)
 		found = True
 	#if current_user and harvestee have no common match offers already, found = false
@@ -511,25 +510,29 @@ def vote_yes(item_id):  #, current_user_id
 
 			#the common matches between the current user and the harvestee
 			common_matches = set(harvestee_matchoffer_item_ids) & set(current_user_matchoffer_item_ids)
-			print "COMMON MATCHES", common_matches
 
 			if common_matches:
 				common_matches = list(common_matches)
 				first_common_match = common_matches[0]
 				match_offer = dbsession.query(MatchOffer).filter_by(id=first_common_match).first()
-				match_offer.date_of_match = datetime.datetime.now()
-				message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly!"
-				found = True
+				match_offer_item=dbsession.query(MatchOfferItem).filter_by(match_offer_id=match_offer.id).first()
+				first_user_id = match_offer_item.user_id
+				if first_user_id != current_user.id:
+					match_offer.date_of_match = datetime.datetime.now()
+					message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly!"
+					found = True
 
 	# else: if harvestee has not liked anything from current_user yet...
 	if not found:
 		random_item_from_user = dbsession.query(Item).filter_by(user_id=current_user.id).first()
 		if random_item_from_user:
-			match_offer = MatchOffer(match_offer_items=[
-			MatchOfferItem(item_id=item_interested.id),
-			MatchOfferItem(item_id=random_item_from_user.id)
-			])
+			match_offer = MatchOffer()
 			dbsession.add(match_offer)
+			dbsession.commit()
+			match_offer_item1 = MatchOfferItem(item_id=item_interested.id, match_offer_id=match_offer.id, user_id=current_user.id)
+			match_offer_item2 = MatchOfferItem(item_id=random_item_from_user.id, match_offer_id=match_offer.id, user_id=current_user.id)
+			dbsession.add(match_offer_item1)
+			dbsession.add(match_offer_item2)
 
 	dbsession.commit()
 	return json.dumps({"message": message})
