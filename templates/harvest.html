@@ -83,6 +83,7 @@
 		$("#no").click(function (event) {
 			event.preventDefault();
 			$.get("/decision_no/" + item_to_show.id, function(message) {
+                // we don't care what the empty message is for no
 				show_first_harvest_item();
 			})
 			

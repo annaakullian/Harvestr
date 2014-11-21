@@ -10,20 +10,32 @@ import requests
 from model import User, Item, ItemAttribute, MatchOffer, MatchOfferItem, ItemViewed, session as dbsession
 import json
 from sqlalchemy.orm import joinedload
-from sqlalchemy import  or_
+from sqlalchemy import or_
 from sqlalchemy.sql import exists
 from math import sin, cos, sqrt, atan2, radians
 import datetime 
-# import smtplib
-
-# fromaddr = 'harvestr.swap@gmail.com'
-# toaddrs  = current_user.email
-# msg = 'Congratulations, you have a match with ?'
+from flask.ext.mail import Mail, Message
 
 from authomatic_config import AUTHOMATIC_CONFIG
 
+DEBUG = True
+SECRET_KEY = 'hidden'
+USERNAME = 'harvestr.swap@gmail.com'
+PASSWORD = 'harvestrharvestr'
+
+MAIL_SERVER='smtp.gmail.com'
+MAIL_PORT=465
+MAIL_USE_TLS = False
+MAIL_USE_SSL= True
+MAIL_USERNAME = 'harvestrswap@gmail.com'
+MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD") 
+
 app =  Flask(__name__)
 app.secret_key="annabanana"
+app.config.from_object(__name__)
+mail = Mail(app)
+
+
 
 #this is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
@@ -40,6 +52,7 @@ authomatic = Authomatic(AUTHOMATIC_CONFIG, 'your secret string', report_errors=F
 
 
 key = os.environ.get("GOOGLE_MAPS_EMBED_KEY")
+
 
 #this is the home pagef
 @app.route('/')
@@ -160,10 +173,11 @@ def profile():
 			for match_id in match_offer_ids_of_current_user:
 				match_offer = dbsession.query(MatchOffer).filter(MatchOffer.id == match_id, MatchOffer.date_of_match != None).first()
 				if match_offer:
-					match_item = dbsession.query(MatchOfferItem).filter_by(match_offer_id=match_id).filter(~MatchOfferItem.item_id.in_(current_user_item_ids)).one()
-					##item = dbsession.query(Item).filter_by(id=match_item.item_id).one()
-					item = match_item.item
-					match_items.append(item)
+					match_item = dbsession.query(MatchOfferItem).filter_by(match_offer_id=match_id).filter(~MatchOfferItem.item_id.in_(current_user_item_ids)).first()
+					if match_item:
+						# item = dbsession.query(Item).filter_by(id=match_item.item_id).one()
+						item = match_item.item_id
+						match_items.append(item)
 
 
 	# user = dbsession.query(User).get(session['user_id'])
@@ -362,10 +376,12 @@ def filter():
 	# query = query.filter(ViewedItem.viewer_id = current_user.id)
 
 	viewed_items = dbsession.query(ItemViewed).filter_by(viewer_id = current_user.id).all()
+	print "VIEWED", viewed_items
 	if viewed_items:
 		viewed_item_ids = []
-		for item in viewed_items:
-			viewed_item_ids.append(item.id)
+		for viewed_item in viewed_items:
+			viewed_item_ids.append(viewed_item.item_id)
+		print "item ids", viewed_item_ids
 		query = query.filter(~Item.id.in_(viewed_item_ids))
 
 
@@ -446,6 +462,7 @@ def filter():
 
 	# json.dumps(to_return)
 	# print len(query.all())
+	print "ITEMS", [i['id'] for i in to_return]
 	return json.dumps(to_return)
 	#distance=1+mile&fruit=
 
@@ -488,7 +505,14 @@ def vote_yes(item_id):  #, current_user_id
 	gift = dbsession.query(ItemAttribute).filter_by(item_id=item_interested.id).filter_by(attribute_name="gift").filter_by(attribute_value="yes").first()
 	if gift:
 		match_offer=MatchOffer(date_of_match=datetime.datetime.now())
-		message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly!"
+		message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly with your match's contact info!"
+		#email both users that they have a match 
+		user1_email = current_user.email
+		user2 = dbsession.query(User).filter_by(id=item_interested.user_id).one()
+		user2_email = user2.email
+		msg = Message("You have a match!", sender='harvestrswap@gmail.com', recipients=[user1_email, user2_email])
+		msg.body = "Greetings %s, and %s! Congrats! You are a match. I'll leave it to you to take it from here and swap your items! Thanks for using Harvestr to find some yummy food and eliminate food waste." % (current_user.name, user2.name)
+		mail.send(msg)
 		dbsession.add(match_offer)
 		dbsession.commit()
 		match_offer_copy = dbsession.query(MatchOffer).filter_by(date_of_match=match_offer.date_of_match).first()
@@ -514,12 +538,19 @@ def vote_yes(item_id):  #, current_user_id
 			if common_matches:
 				common_matches = list(common_matches)
 				first_common_match = common_matches[0]
-				match_offer = dbsession.query(MatchOffer).filter_by(id=first_common_match).first()
+				match_offer = dbsession.query(MatchOffer).filter_by(id=first_common_match).one()
+				## match_offer = first_common_match.match_offer
 				match_offer_item=dbsession.query(MatchOfferItem).filter_by(match_offer_id=match_offer.id).first()
 				first_user_id = match_offer_item.user_id
 				if first_user_id != current_user.id:
 					match_offer.date_of_match = datetime.datetime.now()
 					message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly!"
+					user1_email = current_user.email
+					user2 = dbsession.query(User).filter_by(id=item_interested.user_id).one()
+					user2_email = user2.email
+					msg = Message("You have a match!", sender='harvestrswap@gmail.com', recipients=[user1_email, user2_email])
+					msg.body = "Greetings %s, and %s! Congrats! You are a match. I'll leave it to you to take it from here and swap your items! Thanks for using Harvestr to find some yummy food and eliminate food waste." % (current_user.name, user2.name)
+					mail.send(msg)
 					found = True
 
 	# else: if harvestee has not liked anything from current_user yet...
