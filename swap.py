@@ -15,7 +15,6 @@ from sqlalchemy.sql import exists
 from math import sin, cos, sqrt, atan2, radians
 import datetime 
 from flask.ext.mail import Mail, Message
-
 from authomatic_config import AUTHOMATIC_CONFIG
 
 DEBUG = True
@@ -516,7 +515,7 @@ def vote_yes(item_id):  #, current_user_id
 		dbsession.add(match_offer)
 		dbsession.commit()
 		match_offer_copy = dbsession.query(MatchOffer).filter_by(date_of_match=match_offer.date_of_match).first()
-		match_offer_items = MatchOfferItem(item_id=item_interested.id, match_offer_id=match_offer_copy.id)
+		match_offer_items = MatchOfferItem(item_id=item_interested.id, match_offer_id=match_offer_copy.id, user_id=current_user.id)
 		dbsession.add(match_offer_items)
 		found = True
 	#if current_user and harvestee have no common match offers already, found = false
