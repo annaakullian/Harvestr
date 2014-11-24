@@ -161,8 +161,24 @@ def how_it_works():
 
 @app.route('/profile')	
 def profile():
+	#looking for matches to show on profile page
+	#first, find matches for gifts
 	current_user_items = current_user.items
 	match_items = []
+	#for gift items
+	match_offers_of_current_user = dbsession.query(MatchOfferItem).filter_by(user_id=current_user.id).all()
+	if match_offers_of_current_user:
+		match_offer_ids_of_current_user = [i.match_offer_id for i in match_offers_of_current_user]
+		for match_id in match_offer_ids_of_current_user:
+			count_matches = match_offer_ids_of_current_user.count(match_id)
+			if count_matches == 1:
+				match_offer = dbsession.query(MatchOffer).filter(MatchOffer.id == match_id, MatchOffer.date_of_match != None).first()
+				if match_offer:
+					match_item = dbsession.query(MatchOfferItem).filter_by(match_offer_id=match_id).first()
+					if match_item:
+						item = dbsession.query(Item).filter_by(id=match_item.item_id).one()
+						match_items.append(item)
+
 	if current_user_items: 
 		current_user_item_ids = [i.id for i in current_user_items]
 		#get all items in match offer items were items belong to current user
@@ -174,11 +190,11 @@ def profile():
 				if match_offer:
 					match_item = dbsession.query(MatchOfferItem).filter_by(match_offer_id=match_id).filter(~MatchOfferItem.item_id.in_(current_user_item_ids)).first()
 					if match_item:
-						# item = dbsession.query(Item).filter_by(id=match_item.item_id).one()
-						item = match_item.item_id
+						item = dbsession.query(Item).filter_by(id=match_item.item_id).one()
+						# item = match_item.item_id
 						match_items.append(item)
 
-
+	print match_items, "MATCHES"
 	# user = dbsession.query(User).get(session['user_id'])
 	# item_dictionary = item_dictionary
 	return render_template("profile.html", match_items=match_items)

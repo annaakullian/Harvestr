@@ -11,3 +11,11 @@ body {
 		opacity: 0.8;
 
 }
+
+.title {font-family: 'Londrina Sketch', cursive;
+			font-size: 73px;
+			color: white;}
+.text {font-family: 'Amatic SC', cursive;
+			font-size: 20px;
+			background-color: #CC3300
+; }

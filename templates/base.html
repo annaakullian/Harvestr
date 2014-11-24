@@ -24,12 +24,14 @@
 
         {% block css %}
 		<link rel="stylesheet" href="static/css/harvester.css"/>
+		<link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Cabin+Sketch|Londrina+Sketch|Londrina+Outline|Sigmar+One|Monofett|Monoton|Julius+Sans+One|Amatic+SC:400,700' rel='stylesheet' type='text/css'>
         {% endblock %}
 
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
+
 	</head>
-	<body style="font-family:Cassandre Graphika;" >
+	<body class="contenttext">
 		{% block entirepage %}
 
 			{% if current_user.is_anonymous() %}
@@ -52,8 +54,7 @@
 			{% endif %}
 
 			<h1 class="title">Harvestr</h1>
-				<p>A place to swap food that would otherwise be wasted</p>
-				When life gives you lemons...
+				<p class="titletext">A place to swap food that would otherwise be wasted</p>
 		</header>
 
 

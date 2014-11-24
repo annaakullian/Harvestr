@@ -30,44 +30,49 @@
 						<form method="post" id="location" action="/editprofile" enctype="multipart/form-data">
 							
 							<div class="row half">
-								<div class="6u"><input type="text" name="user_name" value="{{ current_user.name}}" placeholder="Name"/></div>
+								<div class="6u"><input type="text" name="user_name" value="{{ current_user.name}}" class="contenttext" placeholder="Name"/></div>
 								{%if current_user.location == None %}
-									<div class="6u"><input type="text" name= "user_location" placeholder="Location" /></div>
+									<div class="6u"><input type="text" name= "user_location" class="contenttext" placeholder="Location" /></div>
 								{% else %}
-									<div class="6u"><input type="text" name= "user_location" value="{{ current_user.location}}" placeholder="Location" /></div>
+									<div class="6u"><input type="text" name= "user_location" class="contenttext" value="{{ current_user.location}}" placeholder="Location" /></div>
 								{% endif %}
+							</div>
+							
+							<div class="biggertext">
+							Edit and add items
+							</div>
 													
 				
 								{% for photo in current_user.items %}
 								<div>
-								<div class="harvestphoto fit"><img src= "{{ photo.photo_path }}" alt=""/></div>
+								<div class="harvestphoto fit contenttext"><img src= "{{ photo.photo_path }}" alt=""/></div>
 									Fruit or Veggie?
 									<!-- <input type="hidden" name="item[{{ photo.id }}][]" value="{{ photo.id }}"> -->
-									<select name="forv-{{ photo.id }}">
+									<select name="forv-{{ photo.id }}" class="contenttext">
 										{% for option in ["fruit", "veggie", "other"] %}		
 											<option value= "{{ option }}" {% if items_attribute_dictionary.get(photo.id, {}).get('forv') == option %} selected{% endif %}>{{option | capitalize}}
 										{% endfor %}</option>
 									</select>
 									Open or Closed?
-									<select name="status-{{ photo.id }}">
+									<select name="status-{{ photo.id }}" class="contenttext">
 										{% for option in ["open", "closed"] %}
 											<option value="{{ option }}" {% if items_attribute_dictionary.get(photo.id, {}).get('status') == option %} selected{% endif %}>{{option | capitalize}}
 											{% endfor %}</option>
 									</select>
 									Gift?
-									<select name="gift-{{ photo.id }}">
+									<select name="gift-{{ photo.id }}" class="contenttext">
 										{% for option in ["no", "yes"] %}
 											<option value="{{ option }}" {% if items_attribute_dictionary.get(photo.id, {}).get('gift') == option %} selected{% endif %}>{{option | capitalize}}
 											{% endfor %}</option>
 									</select>
 									Prepicked?
-									<select name="prepicked-{{ photo.id }}">
+									<select name="prepicked-{{ photo.id }}" class="contenttext">
 										{% for option in ["yes", "no"] %}
 											<option value="{{ option }}" {% if items_attribute_dictionary.get(photo.id, {}).get('prepicked') == option %} selected{% endif %}>{{option | capitalize}}
 										{% endfor %}</option>
 									</select>
 									Add a short description of your item below.
-									<div><input type="text" name="item_description-{{ photo.id }}" value= "{{ photo.description }}" placeholder="Item Description"/></div>
+									<div><input type="text" name="item_description-{{ photo.id }}" class="contenttext" value= "{{ photo.description }}" placeholder="Item Description"/></div>
 							</div>
 						
 								{% endfor %}
@@ -77,40 +82,40 @@
 
 										<div id="new_item_info" class="hidden">
 											<div id="dynamicInput">
-										          Item 1<br><input type="file" name="file[]">
+										          Item 1<br><input type="file" class="contenttext" name="file[]">
 										    </div>				
 											Fruit or Veggie?
-											<select name="forv_new[]">
+											<select name="forv_new[]" class="contenttext">
 												{% for option in ["fruit", "veggie", "other"] %}		
 													<option value= "{{ option }}">{{option | capitalize}}
 												{% endfor %}</option>
 											</select>
 											Open or Closed?
-											<select name="status_new[]">
+											<select name="status_new[]" class="contenttext">
 												{% for option in ["open", "closed"] %}
 													<option value="{{ option }}">{{option | capitalize}}
 													{% endfor %}</option>
 											</select>
 											Gift?
-											<select name="gift_new[]">
+											<select name="gift_new[]" class="contenttext">
 												{% for option in ["no", "yes"] %}
 													<option value="{{ option }}">{{option | capitalize}}
 													{% endfor %}</option>
 											</select>
 											Prepicked?
-											<select name="prepicked_new[]">
+											<select name="prepicked_new[]" class="contenttext">
 												{% for option in ["yes", "no"] %}
 													<option value="{{ option }}">{{option | capitalize}}
 												{% endfor %}</option>
 											</select>
 											Add a short description of your item below.
-											<div><input name= "description_new[]" type="text" placeholder="Item Description"/></div>
+											<div><input name= "description_new[]" class="contenttext" type="text" placeholder="Item Description"/></div>
 										</div>
 								</div>
 
 								      </div>
 
-								     <input type="button" id="new_item" value="Add an item to trade">
+								     <input type="button" id="new_item" class="contenttext" value="Add an item to trade">
 
 								</div>
 							</div>
@@ -119,7 +124,7 @@
 								<div class="12u">
 									<ul class="actions">
 										
-										<li><input type="submit" class="button" value="Save My Info" /></li>
+										<li><input type="submit" class="button contenttext" value="Save My Info" /></li>
 										
 									</ul>
 								</div>
@@ -135,16 +140,9 @@
 			
 		<!-- Footer -->
 			<section id="footer">
-				<ul class="icons">
-					<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-					<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-					<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
-					<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
-					<li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>
-				</ul>
 				<div class="copyright">
 					<ul class="menu">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">Anna Akullian</a></li>
 					</ul>
 				</div>
 			</section>
