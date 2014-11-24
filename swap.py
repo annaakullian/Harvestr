@@ -81,7 +81,8 @@ def login(provider_name):
 
 			# If we don't find the user in our database, add it!
 			if not user:
-				user = User(facebookid = facebook_id, email=result.user.email, name=result.user.name)
+				profilepic = "http://graph.facebook.com/"+ facebook_id +"/picture?type=large"
+				user = User(facebookid = facebook_id, email=result.user.email, name=result.user.name, profilepic=profilepic)
 				dbsession.add(user)
 				dbsession.commit()
 

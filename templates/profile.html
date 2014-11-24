@@ -12,9 +12,10 @@
 					<header style="padding: 0">
 						<h2>{{current_user.name}}'s Profile</h2>
 					</header>
+					<img src="{{current_user.profilepic}}" alt="Mountain View" style="width:auto;height:200px"><br>
 					Address: {{current_user.location}}<br>
 					Email: {{current_user.email}}
-						</p>check out all of your open items!</p>
+						<p>check out all of your open items!</p>
 				</section>
 	</div>
 	
@@ -26,6 +27,7 @@
 						<div class="col span_3_of_3">
 							<section>
 								<div class="harvestphoto fit"><img src= "{{ photo.photo_path }}" alt=""/></div>
+								<p>{{photo.description}}</p>
 							</section>
 						</div>
 					</div>
@@ -60,6 +62,7 @@
 				
 			</div>
 		</div>
+	</div>
 		
 				
 {% endblock %}

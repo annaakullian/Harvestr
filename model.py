@@ -22,6 +22,7 @@ class User(Base):
 	facebookid = Column(String(100), nullable = True)
 	email = Column(String(100), nullable = True)
 	location = Column(String(100), nullable=True)
+	profilepic = Column(String(100), nullable = True)
 	latitude = Column(Float, nullable = True)
 	longitude = Column(Float, nullable = True)
 	last_log_in = Column(DateTime, nullable = True)
