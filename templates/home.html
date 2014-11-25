@@ -2,21 +2,31 @@
 
 {% block css %}
    <link rel="stylesheet" href="static/css/home-css.css">
+   <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Cabin+Sketch|Londrina+Sketch|Londrina+Outline|Sigmar+One|Monofett|Monoton|Julius+Sans+One|Amatic+SC:400,700' rel='stylesheet' type='text/css'>
 {% endblock %}
 
 {% block entirepage %}
-<section>
+
+<section class="mytitle">
 	Harvester<br>
+</section>
+
+<section class="text">
 	{% if current_user.is_anonymous() %}
 		<a href="/login/facebook" class="button scrolly">Login with Facebook</a><br>
 		<a href="/howitworks" class="button scrolly">How It Works</a>
 
+
 	{% else %}
+	<section class="hello">
 		Hello {{current_user.name}}!<br>
+	</section>	
 		<a href="/profile" class="button scrolly">View Profile</a><br>
 		<a href="/logout" class="button scrolly">Log out</a>
 	{% endif %}	
 </section>
+<section>
+	</section>
 
 {% endblock %}
 

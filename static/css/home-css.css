@@ -12,10 +12,23 @@ body {
 
 }
 
-.title {font-family: 'Londrina Sketch', cursive;
-			font-size: 73px;
-			color: white;}
+.mytitle {font-family: 'Londrina Sketch', cursive;
+			font-size: 80px;
+			background-color: #CC3300;
+			background-size: 70%;
+			color: white;
+			height: 50px;
+			padding: 0;
+			margin-bottom: 0;
+			}
+
 .text {font-family: 'Amatic SC', cursive;
 			font-size: 20px;
-			background-color: #CC3300
 ; }
+
+.hello {font-family: 'Amatic SC', cursive;
+		color:  white;
+		font-size: 25px;
+		background-color: #CC3300;
+		background-size: 70%;
+}

@@ -59,13 +59,21 @@ def home_page():
 	# user = dbsession.query(User).first()
 	return render_template("home.html")
 
+@app.route('/test')
+def test():
+	return render_template("test.html")
 
-@app.route('/template')
-def template():
-	return render_template("template.html")
+@app.route('/matchopenitems', methods=['GET'])
+def matchopenitems():
+	user_id = request.args.get("user_id")
+	user = dbsession.query(User).filter_by(id=user_id).one()
+	user_items = user.items
+	return render_template("matchopenitems.html", user_items=user_items)
+
 # Login route for all OAuth providers. If one were to add a second provider 
 # (i.e. Twitter, Google), more logic could be added to this method by
 # # checkingthe "provider_name" variable
+
 @app.route('/login/<provider_name>/', methods=['GET', 'POST'])
 def login(provider_name):
 	response = make_response()
@@ -195,7 +203,6 @@ def profile():
 						# item = match_item.item_id
 						match_items.append(item)
 
-	print match_items, "MATCHES"
 	# user = dbsession.query(User).get(session['user_id'])
 	# item_dictionary = item_dictionary
 	return render_template("profile.html", match_items=match_items)

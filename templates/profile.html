@@ -8,61 +8,62 @@
 
 <div class="content style1 featured" style="padding: 0">
 	<div class="container">
-				<section class="main"> 
-					<header style="padding: 0">
-						<h2>{{current_user.name}}'s Profile</h2>
-					</header>
-					<img src="{{current_user.profilepic}}" alt="Mountain View" style="width:auto;height:200px"><br>
-					Address: {{current_user.location}}<br>
-					Email: {{current_user.email}}
-						<p>check out all of your open items!</p>
-				</section>
+		<section class="main"> 
+			<header style="padding: 0">
+				<h2>{{current_user.name}}'s Profile</h2>
+			</header>
+			<img src="{{current_user.profilepic}}" alt="Mountain View" style="width:auto;height:200px"><br>
+			Address: {{current_user.location}}<br>
+			Email: {{current_user.email}}
+				<p>check out all of your open items!</p>
+		</section>
 	</div>
 	
 
-			{% for photo in current_user.items %}
-				{% for attribute in photo.itemsattributes %}
-					{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
-					<div class="section group">
-						<div class="col span_3_of_3">
-							<section>
-								<div class="harvestphoto fit"><img src= "{{ photo.photo_path }}" alt=""/></div>
-								<p>{{photo.description}}</p>
-							</section>
-						</div>
+		{% for photo in current_user.items %}
+			{% for attribute in photo.itemsattributes %}
+				{% if attribute.attribute_name == "status" and attribute.attribute_value == "open" %}
+				<div class="section group">
+					<div class="col span_3_of_3">
+						<section>
+							<div class="harvestphoto fit"><img src= "{{ photo.photo_path }}" alt=""/></div>
+							<p>{{photo.description}}</p>
+						</section>
 					</div>
-					{% endif %}
-				{% endfor %}
+				</div>
+				{% endif %}
 			{% endfor %}
+		{% endfor %}
 
 			<div class="column">
 			<div class="12u">
-				<footer>
+				
 					<a href="/alluserimages" class="button scrolly">View all items</a>
-				</footer>
+				
 			</div>
 	
 		
 
-			<div class="row">
-		
-				<p>YOUR CURRENT MATCHES:</p>
-		
-
-			{% for item in match_items %}
-					<div class="column">
-						<div class="12u">
-							<section>
-								<div class="harvestphoto fit"><img src= "{{ item.photo_path }}" alt=""/></div>
-							</section>
+			<div class="container">
+				<section class="main"> 
+					YOUR CURRENT MATCHES:
+				</section>
+					{% for item in match_items %}
+						<div class="column">
+							<div class="12u">
+								<section>
+									<a href="/matchopenitems?user_id={{item.user_id}}">
+										<img src="{{ item.user.profilepic }}" alt="Mountain View" style="width:auto;height:200px">
+									</a>
+									<div class="harvestphoto fit"><img src= "{{ item.photo_path }}" alt=""/></div>
+								</section>
+							</div>
 						</div>
-					</div>
-			{% endfor %}	
-
-				
+					{% endfor %}		
 			</div>
-		</div>
-	</div>
+			</div>
+</div>
+</section>
 		
 				
 {% endblock %}
