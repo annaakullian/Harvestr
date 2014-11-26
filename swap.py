@@ -398,7 +398,6 @@ def filter():
 	# query = query.filter(ViewedItem.viewer_id = current_user.id)
 
 	viewed_items = dbsession.query(ItemViewed).filter_by(viewer_id = current_user.id).all()
-	print "VIEWED", viewed_items
 	if viewed_items:
 		viewed_item_ids = []
 		for viewed_item in viewed_items:
