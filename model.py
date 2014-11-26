@@ -4,9 +4,12 @@ from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
+import os
 
 
-engine = create_engine("postgres://localhost:5432/harvester", echo=True)
+# engine = create_engine("postgres://localhost:5432/harvester", echo=True)
+
+engine = create_engine(os.environ.get("DATABASE_URL"), echo=True)
 session = scoped_session(sessionmaker(bind=engine,
                                       autocommit = False,
                                       autoflush = False))
@@ -110,13 +113,14 @@ class MatchOfferItem(Base):
 	user = relationship("User", backref=backref("match_offer_items", order_by=id))
 
 # #these are the messages where the author is a user and a match id will show which two items it matches
-class Message(Base):
-	__tablename__="messages"
+class Email(Base):
+	__tablename__="emails"
 	id = Column(Integer, primary_key = True)
-	match_offer_item_id = Column(Integer, ForeignKey('match_offer_items.id'))
-	message_content = Column(String(1000), nullable = True)
+	user_1_email = Column(String(1000), nullable = True)
+	user_2_email = Column(String(1000), nullable = True)
+	user_2_name = Column(String(1000), nullable = True)
+	sent = Column(String(50), nullable = True)
 
-	match_offer_item = relationship("MatchOfferItem", backref=backref("messages", order_by=id))
 
 
 if __name__ == "__main__":

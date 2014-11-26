@@ -16,17 +16,17 @@ from math import sin, cos, sqrt, atan2, radians
 import datetime 
 from flask.ext.mail import Mail, Message
 from authomatic_config import AUTHOMATIC_CONFIG
+import sched, time
+import threading 
 
 DEBUG = True
 SECRET_KEY = 'hidden'
-USERNAME = 'harvestr.swap@gmail.com'
-PASSWORD = 'harvestrharvestr'
 
 MAIL_SERVER='smtp.gmail.com'
 MAIL_PORT=465
 MAIL_USE_TLS = False
 MAIL_USE_SSL= True
-MAIL_USERNAME = 'harvestrswap@gmail.com'
+MAIL_USERNAME = 'harvestr.swap@gmail.com'
 MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD") 
 
 app =  Flask(__name__)
@@ -187,7 +187,6 @@ def profile():
 					if match_item:
 						item = dbsession.query(Item).filter_by(id=match_item.item_id).one()
 						match_items.append(item)
-
 	if current_user_items: 
 		current_user_item_ids = [i.id for i in current_user_items]
 		#get all items in match offer items were items belong to current user
@@ -542,7 +541,7 @@ def vote_yes(item_id):  #, current_user_id
 		match_offer_items = MatchOfferItem(item_id=item_interested.id, match_offer_id=match_offer_copy.id, user_id=current_user.id)
 		dbsession.add(match_offer_items)
 		found = True
-	#if current_user and harvestee have no common match offers already, found = false
+	# if current_user and harvestee have no common match offers already, found = false
 	
 
 	#if current user has any match offers already
@@ -568,6 +567,10 @@ def vote_yes(item_id):  #, current_user_id
 				if first_user_id != current_user.id:
 					match_offer.date_of_match = datetime.datetime.now()
 					message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly!"
+					# user_2 = dbsession.query(User).filter_by(id=item_interested.user_id).one()
+					# match_email = Email(user_1_email=current_user.email, user_2_email=user_2.email, user_2_name=user_2.name)
+					# dbsession.add(match_email)
+					# send_email()
 					user1_email = current_user.email
 					user2 = dbsession.query(User).filter_by(id=item_interested.user_id).one()
 					user2_email = user2.email
@@ -590,8 +593,22 @@ def vote_yes(item_id):  #, current_user_id
 
 	dbsession.commit()
 	return json.dumps({"message": message})
-	
-    
+
+
+# s = sched.scheduler(time.time, time.sleep)
+# def send_email():
+# 	emails_to_send = dbsession.query(Email).filter_by(sent=None).all()
+# 	for email in emails_to_send:
+# 		user1_email = email.user_1_email
+# 		user2_email = email.user_2_email
+# 		user2_name = email.user_2_name
+# 		msg = Message("You have a match!", sender='harvestrswap@gmail.com', recipients=[user1_email, user2_email])
+# 		msg.body = "Greetings %s, and %s! Congrats! You are a match. I'll leave it to you to take it from here and swap your items! Thanks for using Harvestr to find some yummy food and eliminate food waste." % (current_user.name, user2_name)
+# 		mail.send(msg)
+# 		email.sent = "yes"
+# 		dbsession.commit() 
+# 		s.enter(60, 1, send_email, (s,))
+# 		s.run() 
 
 		# user = joel
 		# item = voting-yes-on-this-item (anna's pears)

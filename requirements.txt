@@ -14,7 +14,6 @@ SQLAlchemy==0.9.8
 WTForms==2.0.1
 Werkzeug==0.9.6
 blinker==1.3
-facebook-sdk==1.0.0-alpha
 httplib2==0.9
 itsdangerous==0.24
 oauth2==1.5.211
