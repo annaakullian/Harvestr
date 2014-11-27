@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, flash, redirect, Markup, url_for, send_from_directory, make_response, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, make_response
 from werkzeug import secure_filename
 import hashlib
 from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user
@@ -9,15 +9,21 @@ import os
 import requests 
 from model import User, Item, ItemAttribute, MatchOffer, MatchOfferItem, ItemViewed, session as dbsession
 import json
-from sqlalchemy.orm import joinedload
-from sqlalchemy import or_
 from sqlalchemy.sql import exists
 from math import sin, cos, sqrt, atan2, radians
 import datetime 
 from flask.ext.mail import Mail, Message
 from authomatic_config import AUTHOMATIC_CONFIG
-import sched, time
-import threading 
+from boto.s3.key import Key
+from boto.s3.connection import S3Connection
+
+access_key_s3= os.environ.get('AWS_ACCESS_KEY_ID')
+secret_key_s3= os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+conn = S3Connection('access_key_s3', 'secret_key_s3')
+conn = S3Connection()
+
+s3_bucket = conn.get_bucket(os.environ.get("MY_BUCKET"))
 
 DEBUG = True
 SECRET_KEY = 'hidden'
@@ -48,7 +54,6 @@ def allowed_file(filename):
 login_manager = LoginManager()
 login_manager.init_app(app)
 authomatic = Authomatic(AUTHOMATIC_CONFIG, 'your secret string', report_errors=False)
-
 
 key = os.environ.get("GOOGLE_MAPS_EMBED_KEY")
 
@@ -123,50 +128,6 @@ def load_user(id):
 def how_it_works():
 	return render_template("howitworks.html")
 
-# @app.route('/signup', methods=['GET'])
-# def sign_up():
-# 	return render_template("signup.html")
-
-#next put flash in template!!
-# @app.route('/signup', methods=['POST'])
-# def process_new_user():
-# 	user_location = request.form['user_location']
-# 	r = requests.get("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&key=AIzaSyDjesZT-7Vc5qErTJjS2tDIvxLQdYBxOEY&address=" +\
-# 		request.form['user_location'])
-# 	user_latitude = r.json()['results'][0]['geometry']['location']['lat']
-# 	user_longitude = r.json()['results'][0]['geometry']['location']['lng']
-# 	user_email = request.form['user_email']
-# 	facebookid = request.form['facebookid']
-# 	user_name = request.form['user_name']
-# 	password = request.form['password']
-# 	user = User(latitude = user_latitude, longitude=user_longitude, facebookid=facebookid, name=user_name, email = user_email, password=password, location=user_location)
-# 	if dbsession.query(User).filter_by(email = user_email).first():
-# 		flash("That email is taken. If you are already a harvester, log in here!"+ Markup("<h1><a href='/loginfb'>Login</a></h1>"))
-# 		return redirect('/signup')
-# 	else:
-# 		dbsession.add(user)
-#     	dbsession.commit()
-#     	session['user_id'] = user.id
-#     	return redirect("/profile")
-
-# @app.route('/login', methods=['GET'])
-# def login():
-# 	return render_template("login.html")
-
-
-# @app.route('/login', methods=['POST'])	
-# def process_login():
-# 	user_email = request.form['user_email']
-# 	password = request.form['password']
-
-# 	user = dbsession.query(User).filter_by(password=password).filter_by(email=user_email).first()
-# 	if user:
-# 		session['user_id'] = user.id
-# 		# session['user'] = { 'name': user.name, 'email': user.email, 'location': user.location, 'facebookid': user.facebookid, 'latitude': user.latitude, 'longitude': user.longitude }
-# 		return redirect("/profile") 
-# 	else:
-# 		flash("That user was not recognized. Please try again, or create an account here:"+ Markup("<h1><a href='/signup'>Signup</a></h1>"))
-# 		return redirect("/login")
 
 @app.route('/profile')	
 def profile():
@@ -273,12 +234,8 @@ def get_user_info():
 		item_descriptions[photo_id] = value
 
 	for photo_id, item_description in item_descriptions.iteritems():
-		#one instead of first because there is only one item by the unique id
 		item = dbsession.query(Item).filter_by(id=photo_id).one()
 		item.description = item_description
-		# dbsession.commit()
-
-	#print "\n\n\n\n\n\n\n\nITEM",request.form
 
 	photo_attribs = ['forv', 'status', 'gift', 'prepicked']
 
@@ -317,24 +274,33 @@ def get_user_info():
 	new_gift = request.form.getlist("gift_new[]")
 	new_prepicked = request.form.getlist("prepicked_new[]")
 	new_description = request.form.getlist("description_new[]")
-	filenames = []
+	# filenames = []
 
 	for i in range(len(uploaded_files)):
-		# print "\n\n\n\n\n\n\n\n\n\n",i, new_description, new_forvs
 		if uploaded_files[i].filename == '':
 			continue
-		# if file and allowed_file(file.filename):
-		filename = secure_filename(uploaded_files[i].filename)
-		filedata = uploaded_files[i].stream.read()
-		hash_id = hashlib.md5(filedata).hexdigest()
-		file_path = "/static/uploads/%s" % filename 
+
+		filedata = uploaded_files[i].stream.read()  # actully binary contents of image 	
+		hash_id = hashlib.md5(filedata).hexdigest()  #  454574389593847598345 unique name
+
+		k = Key(s3_bucket) 
+		k.key = hash_id 
+		k.set_contents_from_string(filedata, policy='public-read')
+		file_path = k.generate_url(0, query_auth=False)
+
+
+		# filename = secure_filename(uploaded_files[i].filename)
+		# filedata = uploaded_files[i].stream.read()
+		# hash_id = hashlib.md5(filedata).hexdigest()
+		# file_path = "/static/uploads/%s" % filename 
+		
 		if dbsession.query(Item).filter_by(hash_id=hash_id).first():
 			flash("This photo already exists! You can edit the information on your current photo")
 			return redirect(url_for('editprofile'))
 		else:
-			uploaded_files[i].stream.seek(0)
-			uploaded_files[i].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-			filenames.append(filename)
+			# uploaded_files[i].stream.seek(0)
+			# uploaded_files[i].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			# filenames.append(filename)
 			item = Item(user_id=current_user.id, photo_path=file_path, hash_id=hash_id, description=new_description[i], date_item_added=datetime.datetime.now())
 			dbsession.add(item)
 	  		dbsession.commit()
@@ -567,6 +533,7 @@ def vote_yes(item_id):  #, current_user_id
 					match_offer.date_of_match = datetime.datetime.now()
 					message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly!"
 					# user_2 = dbsession.query(User).filter_by(id=item_interested.user_id).one()
+					#user_1 = current_user
 					# match_email = Email(user_1_email=current_user.email, user_2_email=user_2.email, user_2_name=user_2.name)
 					# dbsession.add(match_email)
 					# send_email()
@@ -592,68 +559,6 @@ def vote_yes(item_id):  #, current_user_id
 
 	dbsession.commit()
 	return json.dumps({"message": message})
-
-
-# s = sched.scheduler(time.time, time.sleep)
-# def send_email():
-# 	emails_to_send = dbsession.query(Email).filter_by(sent=None).all()
-# 	for email in emails_to_send:
-# 		user1_email = email.user_1_email
-# 		user2_email = email.user_2_email
-# 		user2_name = email.user_2_name
-# 		msg = Message("You have a match!", sender='harvestrswap@gmail.com', recipients=[user1_email, user2_email])
-# 		msg.body = "Greetings %s, and %s! Congrats! You are a match. I'll leave it to you to take it from here and swap your items! Thanks for using Harvestr to find some yummy food and eliminate food waste." % (current_user.name, user2_name)
-# 		mail.send(msg)
-# 		email.sent = "yes"
-# 		dbsession.commit() 
-# 		s.enter(60, 1, send_email, (s,))
-# 		s.run() 
-
-		# user = joel
-		# item = voting-yes-on-this-item (anna's pears)
-
-	    # step2: no, so make an offer
-	    # insert into mo:
-	    #     null date
-	    # insert into moi:
-	    #     m.oid, item (pears)
-	    #     m.oid, item (random thing of joel)
-	    # (and now we wait for anna to offer to joel) 
-	
-	#the owner of the interested item
-	# harvestee = item_interested.user_id 
-	# #all harvestee items
-	# user_intersted_items = dbsession.query(Item).filter_by(user_id = harvestee.id).all()
-
-
-	# harvestee_item_ids = []
-	# for item in harvestee_items:
-	# 	user_intersted_item_ids.append(item.id)
-
-
-	# current_user_items = dbsession.query(Item).filter_by(user_id=current_user.id)
-	
-
-	# current_user_item_ids = []
-	# for item in current_user_items:
-	# 	current_user_item_ids.append(item.id)
-
-	## same could use list comp here
-
-	#first scenario: user likes an item, and the owner of that items
-	#has liked one of the current users items
-	
-	# item = voting-yes-on-this-item (joels figs)
-	# step1: has anna offered anything to joel already?
-	# find all moi's where owner-of-item (joel) 
-	#    and m.oid in (moi.oid with any item-belonging-to-anna)
-
-
-	#   (ie joel liked something of anna's and now she likes something of his)
-    # if so, it's a match!
-    # pick first of those matches and 
-    # put mo.date-of-match to now
-    # match_offer = MatchOffer()
 
 
 

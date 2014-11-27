@@ -118,8 +118,9 @@ class Email(Base):
 	id = Column(Integer, primary_key = True)
 	user_1_email = Column(String(1000), nullable = True)
 	user_2_email = Column(String(1000), nullable = True)
+	user_1_name = Column(String(1000), nullable = True)
 	user_2_name = Column(String(1000), nullable = True)
-	sent = Column(String(50), nullable = True)
+	sent = Column(Boolean, default = False)
 
 
 
