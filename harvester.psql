@@ -1,0 +1,175 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+SET search_path = public, pg_catalog;
+
+--
+-- Data for Name: emails; Type: TABLE DATA; Schema: public; Owner: annaakullian
+--
+
+COPY emails (id, user_1_email, user_2_email, user_1_name, user_2_name, sent) FROM stdin;
+\.
+
+
+--
+-- Name: emails_id_seq; Type: SEQUENCE SET; Schema: public; Owner: annaakullian
+--
+
+SELECT pg_catalog.setval('emails_id_seq', 1, false);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: annaakullian
+--
+
+COPY users (id, name, facebookid, email, location, profilepic, latitude, longitude, last_log_in) FROM stdin;
+1	Adam Nathan Akullian	10100591820568641	akullian@u.washington.edu	Oakland, CA	http://graph.facebook.com/10100591820568641/picture?type=large	37.8043637000000032	-122.271113700000001	2014-11-26 16:58:35.646607
+2	Anna Akullian	10203023004349373	annaakullian@gmail.com	1207 Bonita Ave Berkeley, CA 94709	http://graph.facebook.com/10203023004349373/picture?type=large	37.8849870000000024	-122.273026999999999	2014-11-26 17:02:45.721317
+\.
+
+
+--
+-- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: annaakullian
+--
+
+COPY items (id, user_id, photo_path, description, date_item_added, hash_id) FROM stdin;
+1	1	https://harvestr.s3.amazonaws.com/7304341e0d545ad865a35b4c47afea36	A bag of apples from my tree	2014-11-26 16:59:32.728528	7304341e0d545ad865a35b4c47afea36
+2	1	https://harvestr.s3.amazonaws.com/d04650741851cd2089e7170af2716b9e	meyer lemons	2014-11-26 17:01:30.370294	d04650741851cd2089e7170af2716b9e
+3	1	https://harvestr.s3.amazonaws.com/fe50349961f23df6822ab8bacc7bd097	20 peaches	2014-11-26 17:02:09.196782	fe50349961f23df6822ab8bacc7bd097
+4	2	https://harvestr.s3.amazonaws.com/c7f2b016ac0969056835150cc130ba41	Box of fuji apples	2014-11-26 17:07:47.637321	c7f2b016ac0969056835150cc130ba41
+5	2	https://harvestr.s3.amazonaws.com/0d412f06e4ad1732630017c22ae785b9	small basket of tomatoes 	2014-11-26 17:07:48.846304	0d412f06e4ad1732630017c22ae785b9
+6	2	https://harvestr.s3.amazonaws.com/02900232c48061995d06127c4d8ac78a	Sunflowers (about 30)	2014-11-26 17:07:49.781575	02900232c48061995d06127c4d8ac78a
+7	2	https://harvestr.s3.amazonaws.com/f8160f7d4f1405b125cae94e3b608e4f	plums	2014-11-26 17:07:49.889279	f8160f7d4f1405b125cae94e3b608e4f
+\.
+
+
+--
+-- Name: items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: annaakullian
+--
+
+SELECT pg_catalog.setval('items_id_seq', 7, true);
+
+
+--
+-- Data for Name: itemsattributes; Type: TABLE DATA; Schema: public; Owner: annaakullian
+--
+
+COPY itemsattributes (id, item_id, attribute_name, attribute_value) FROM stdin;
+1	1	forv	fruit
+2	1	status	open
+3	1	gift	no
+4	1	prepicked	yes
+5	2	forv	fruit
+6	2	status	open
+7	2	gift	no
+8	2	prepicked	yes
+9	3	forv	fruit
+10	3	status	open
+11	3	gift	no
+12	3	prepicked	yes
+13	4	forv	fruit
+14	4	status	open
+15	4	gift	no
+16	4	prepicked	yes
+17	5	forv	fruit
+18	5	status	open
+19	5	gift	no
+20	5	prepicked	yes
+21	6	forv	fruit
+22	6	status	open
+23	6	gift	no
+24	6	prepicked	yes
+25	7	forv	fruit
+26	7	status	open
+27	7	gift	no
+28	7	prepicked	yes
+\.
+
+
+--
+-- Name: itemsattributes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: annaakullian
+--
+
+SELECT pg_catalog.setval('itemsattributes_id_seq', 28, true);
+
+
+--
+-- Data for Name: itemsviewed; Type: TABLE DATA; Schema: public; Owner: annaakullian
+--
+
+COPY itemsviewed (id, item_id, viewer_id, decision, date_viewed) FROM stdin;
+1	4	1	yes	2014-11-26 17:08:45.175891
+2	5	1	yes	2014-11-26 17:08:52.651402
+3	6	1	yes	2014-11-26 17:08:57.005554
+4	7	1	yes	2014-11-26 17:08:58.632912
+\.
+
+
+--
+-- Name: itemsviewed_id_seq; Type: SEQUENCE SET; Schema: public; Owner: annaakullian
+--
+
+SELECT pg_catalog.setval('itemsviewed_id_seq', 4, true);
+
+
+--
+-- Data for Name: match_offers; Type: TABLE DATA; Schema: public; Owner: annaakullian
+--
+
+COPY match_offers (id, date_of_match) FROM stdin;
+1	\N
+2	\N
+3	\N
+4	\N
+\.
+
+
+--
+-- Data for Name: match_offer_items; Type: TABLE DATA; Schema: public; Owner: annaakullian
+--
+
+COPY match_offer_items (id, match_offer_id, item_id, user_id) FROM stdin;
+1	1	4	1
+2	1	1	1
+3	2	5	1
+4	2	1	1
+5	3	6	1
+6	3	1	1
+7	4	7	1
+8	4	1	1
+\.
+
+
+--
+-- Name: match_offer_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: annaakullian
+--
+
+SELECT pg_catalog.setval('match_offer_items_id_seq', 8, true);
+
+
+--
+-- Name: match_offers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: annaakullian
+--
+
+SELECT pg_catalog.setval('match_offers_id_seq', 4, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: annaakullian
+--
+
+SELECT pg_catalog.setval('users_id_seq', 2, true);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

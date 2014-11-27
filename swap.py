@@ -17,8 +17,8 @@ from authomatic_config import AUTHOMATIC_CONFIG
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection
 
-access_key_s3= os.environ.get('AWS_ACCESS_KEY_ID')
-secret_key_s3= os.environ.get('AWS_SECRET_ACCESS_KEY')
+access_key_s3 = os.environ.get('AWS_ACCESS_KEY_ID')
+secret_key_s3 = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 conn = S3Connection('access_key_s3', 'secret_key_s3')
 conn = S3Connection()
