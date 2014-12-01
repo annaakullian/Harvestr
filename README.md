@@ -77,6 +77,3 @@ $ . env/bin/activate
 
 2) Point your browser to:
 <pre><code>http://localhost:5000/</code></pre>
-
-  
-####How it works
