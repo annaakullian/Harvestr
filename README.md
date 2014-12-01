@@ -37,20 +37,21 @@ $ . env/bin/activate
 ####Acess Keys:
 
 1) Get access keys for the following variables and write the following code:
-<pre><code>$
-export GOOGLE_MAPS_EMBED_KEY = [your google maps key]<br/>
-export FACEBOOK_SECRET = [your facebook secret key]<br/>
-export FACEBOOK_ID=[your facebook id]<br/>
-export DATABASE_URL=[your postgres database url]<br/>
-export MAIL_PASSWORD=[your gmail password]<br/>
-export AWS_ACCESS_KEY_ID=[your amazon web service access key id]<br/>
-export AWS_SECRET_ACCESS_KEY=[your amazon web service secret access key]<br/>
-export MY_BUCKET=[the name of your amazon s3 bucket]<br/>
+<pre><code>
+(env)$ export GOOGLE_MAPS_EMBED_KEY = [your google maps key]<br/>
+(env)$ export FACEBOOK_SECRET = [your facebook secret key]<br/>
+(env)$ export FACEBOOK_ID=[your facebook id]<br/>
+(env)$ export DATABASE_URL=[your postgres database url]<br/>
+(env)$ export MAIL_PASSWORD=[your gmail password]<br/>
+(env)$ export AWS_ACCESS_KEY_ID=[your amazon web service access key id]<br/>
+(env)$ export AWS_SECRET_ACCESS_KEY=[your amazon web service secret access key]<br/>
+(env)$ export MY_BUCKET=[the name of your amazon s3 bucket]<br/>
 </code></pre>
 
 ####Run the app:
 
-1) <pre><code>python swap.py</code></pre>
+1) Write the following:
+<pre><code>(env)$ python swap.py</code></pre>
 
 2) Point your browser to:
 <pre><code>http://localhost:5000/</code></pre>
