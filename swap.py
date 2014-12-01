@@ -17,6 +17,7 @@ from authomatic_config import AUTHOMATIC_CONFIG
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection
 
+#keys and connection for amazon s3
 access_key_s3 = os.environ.get('AWS_ACCESS_KEY_ID')
 secret_key_s3 = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
@@ -28,6 +29,7 @@ s3_bucket = conn.get_bucket(os.environ.get("MY_BUCKET"))
 DEBUG = True
 SECRET_KEY = 'hidden'
 
+#information for the gmail server for sending emails
 MAIL_SERVER='smtp.gmail.com'
 MAIL_PORT=465
 MAIL_USE_TLS = False
@@ -40,8 +42,6 @@ app.secret_key="annabanana"
 app.config.from_object(__name__)
 mail = Mail(app)
 
-
-
 #this is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 app.config['ALLOWED_EXTENSIONS'] = set(['jpg', 'jpeg', 'gif', 'png', 'pdf', 'txt'])
@@ -50,23 +50,17 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 #set up flask login manager and authomatic helpers
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 authomatic = Authomatic(AUTHOMATIC_CONFIG, 'your secret string', report_errors=False)
 
+#key for googlemaps api
 key = os.environ.get("GOOGLE_MAPS_EMBED_KEY")
 
-
-#this is the home pagef
+#this is the home 
 @app.route('/')
 def home_page():
-	# user = dbsession.query(User).first()
 	return render_template("home.html")
-
-@app.route('/test')
-def test():
-	return render_template("test.html")
 
 @app.route('/matchopenitems', methods=['GET'])
 def matchopenitems():
@@ -78,7 +72,6 @@ def matchopenitems():
 # Login route for all OAuth providers. If one were to add a second provider 
 # (i.e. Twitter, Google), more logic could be added to this method by
 # # checkingthe "provider_name" variable
-
 @app.route('/login/<provider_name>/', methods=['GET', 'POST'])
 def login(provider_name):
 	response = make_response()
@@ -123,11 +116,9 @@ def logout():
 def load_user(id):
 	return dbsession.query(User).filter_by(id = id).first()
 
-
 @app.route('/howitworks')
 def how_it_works():
 	return render_template("howitworks.html")
-
 
 @app.route('/profile')	
 def profile():
@@ -160,7 +151,6 @@ def profile():
 					match_item = dbsession.query(MatchOfferItem).filter_by(match_offer_id=match_id).filter(~MatchOfferItem.item_id.in_(current_user_item_ids)).first()
 					if match_item:
 						item = dbsession.query(Item).filter_by(id=match_item.item_id).one()
-						# item = match_item.item_id
 						match_items.append(item)
 
 	# user = dbsession.query(User).get(session['user_id'])

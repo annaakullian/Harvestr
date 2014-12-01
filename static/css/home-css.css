@@ -26,9 +26,15 @@ body {
 			font-size: 20px;
 ; }
 
-.hello {font-family: 'Amatic SC', cursive;
-		color:  white;
-		font-size: 25px;
-		background-color: #CC3300;
-		background-size: 70%;
+.hello {
+	font-family: 'Amatic SC', cursive;
+	color:  white;
+	font-size: 25px;
+	background-color: #CC3300;
+	background-size: 70%;
+}
+
+#homebutton {
+	margin-bottom: 10px;
+	margin-top: 10px;
 }

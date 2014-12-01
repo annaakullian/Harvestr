@@ -13,7 +13,7 @@
 
 <section class="text">
 	{% if current_user.is_anonymous() %}
-		<a href="/login/facebook" class="button scrolly">Login with Facebook</a><br>
+		<a id="homebutton" href="/login/facebook" class="button scrolly">Login with Facebook</a><br>
 		<a href="/howitworks" class="button scrolly">How It Works</a>
 
 
@@ -21,7 +21,7 @@
 	<section class="hello">
 		Hello {{current_user.name}}!<br>
 	</section>	
-		<a href="/profile" class="button scrolly">View Profile</a><br>
+		<a id="homebutton" href="/profile" class="button scrolly">View Profile</a><br>
 		<a href="/logout" class="button scrolly">Log out</a>
 	{% endif %}	
 </section>
