@@ -22,12 +22,8 @@ Hoping to reduce food waste, Harvestr connects people with a surplus of backyard
 ![Harvest items](/static/images/screenshot6.jpg)
 ####View an item someone wants to trade. Vote "nope" or "like"
 ![Edit items](/static/images/screenshot7.jpg)
-####If there is a match, you will see this message
+####If there is a match, you will see this message, and both users recieve an email
 ![Edit items](/static/images/screenshot9.jpg)
-####If there is a match, your match's facebook profile picture as well as the item you liked will show up on your profile page
-![Edit items](/static/images/screenshot10.jpg)
-
-
 
 ####Technologies used:
 
