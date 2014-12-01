@@ -21,9 +21,13 @@ $ virtualenv env
 $ . env/bin/activate
 </code></pre>
 
+3) Install the required packages 
+
 ####Database
 
-1) Download and run postgres
+1) Download and run postgres server
+2) Create the databse in PostgreSQL by running the generatedb.sh script. This will seed your database with data from a couple of users.
+<pre><code>$ ./generatedb.sh </code></pre>
 
 1. Make sure you have postgres and python 2.7 installed 
 2. Clone this repo
