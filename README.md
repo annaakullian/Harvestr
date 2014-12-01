@@ -11,7 +11,7 @@ This webapp is also for those who are interested in the sharing economy who may 
 - [Technologies Used] (#technologies-used)
 - [Run Harvestr on your computer] (#run-harvestr-on-your-computer)
 
-####How it works:
+###How it works:
 ####1. Login With Facebook
 ![Login With Facebook](/static/images/screenshot1.jpg)
 ####2. View your profile
@@ -25,15 +25,15 @@ This webapp is also for those who are interested in the sharing economy who may 
 ![Edit items](/static/images/screenshot7.jpg)
 ####6. If there is a match, you will see this message
 ![Edit items](/static/images/screenshot9.jpg)
-####7. and both users will an email like this:
+####7. and both users will recieve an email like this:
 ![Edit items](/static/images/screenshot11.jpg)
 
-####Technologies used:
+###Technologies used:
 
 Python, Flask, JavaScript, HTML5, CSS3, jQuery, Postgresql, SQLAlchemy, Amazon S3, boto, Google Maps API, Gmail's SMTP, Oauth, Flask-Login, Authomatic 
 
 
-####Run Harvestr on your computer:
+###Run Harvestr on your computer:
 
 ####Environment
 
