@@ -9,7 +9,6 @@ How to run Harvestr on your computer:
 2. Clone this repo
 3. I recommend creating a virtual environment
 4. get access keys for the following variables and write the following code:
-5. 
 export GOOGLE_MAPS_EMBED_KEY = [your google maps key]<br/>
 export FACEBOOK_SECRET = [your facebook secret key]<br/>
 export FACEBOOK_ID=[your facebook id]<br/>
@@ -18,8 +17,10 @@ export MAIL_PASSWORD=[your gmail password]<br/>
 export AWS_ACCESS_KEY_ID=[your amazon web service access key id]<br/>
 export AWS_SECRET_ACCESS_KEY=[your amazon web service secret access key]<br/>
 export MY_BUCKET=[the name of your amazon s3 bucket]<br/>
-  
-5. Write the following code:
+5.  Write the following code:
 pip install -r requirements.txt
 ./generatedb.sh
 python swap.py 
+
+  
+
