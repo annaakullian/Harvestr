@@ -2,7 +2,7 @@ Harvestr
 ========
 
 ####Project Description
-Hoping to reduce food waste, Harvestr connects people with a surplus of backyard produce.  Ten lemons for a bag of tomatoes, for example, or a bushel of kale for a pound of garlic. Users post fruits or veggies they want to trade, then specify what they want and a radius to search within. On this Tinder-style webapp, users swipe through potential trades, marking “yes” when they see something they want and “no” if they aren't interested. When there's a match, both users are notified via email.
+Hoping to reduce food waste, Harvestr connects people with a surplus of backyard produce.  Ten lemons for a bag of tomatoes, for example, or a bushel of kale for a pound of garlic. Users post fruits or veggies they want to trade, then specify what they want and a radius to search within. On this Tinder-style webapp, users swipe through potential trades, marking “like” when they see something they want and “nope” if they aren't interested. When there's a match, both users are notified via email.
 
 This webapp is also for those who are interested in the sharing economy who may not have gardens. Those who have items may choose to "gift" their item, meaning they are not looking to trade, but rather to give their item away for free. Others can then search for "gifts", and the "gifted" items will show up in their search. 
 
