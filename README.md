@@ -1,9 +1,29 @@
 Harvestr
 ========
 
+####Project Description
 Hoping to reduce food waste, Harvestr connects people with a surplus of backyard produce.  Ten lemons for a bag of tomatoes, for example, or a bushel of kale for a pound of garlic. Users post fruits or veggies they want to trade, then specify what they want and a radius to search within. On this Tinder-style webapp, users swipe through potential trades, marking “yes” when they see something they want and “no” if they aren't interested. When there's a match, both users are notified via email.
 
-How to run Harvestr on your computer:
+####Table of Contents
+- [How it works] (#how-it-works)
+- [Technologies Used] (#technologies-used)
+- [Run Harvestr on your computer] (#run-harvestr)
+
+####Run Harvestr on your computer:
+
+####Environment
+
+1) Clone the repository:
+<pre><code>$ git clone https://github.com/annaakullian/Harvestr.git</code></pre>
+
+2) Create and activate a virutal environment in the same directory:
+$ virtualenv env
+$ . env/bin/activate
+</code></pre>
+
+####Database
+
+1) Download and run postgres
 
 1. Make sure you have postgres and python 2.7 installed 
 2. Clone this repo
