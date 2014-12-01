@@ -13,14 +13,15 @@ How to run Harvestr on your computer:
 
 4. get access keys for the following variables and write the following code:
 
+
 export GOOGLE_MAPS_EMBED_KEY = [your google maps key]<br/>
-export FACEBOOK_SECRET = [your facebook secret key]
-export FACEBOOK_ID=[your facebook id]
-export DATABASE_URL=[your postgres database url]
-export MAIL_PASSWORD=[your gmail password]
-export AWS_ACCESS_KEY_ID=[your amazon web service access key id]
-export AWS_SECRET_ACCESS_KEY=[your amazon web service secret access key]
-export MY_BUCKET=[the name of your amazon s3 bucket]
+export FACEBOOK_SECRET = [your facebook secret key]<br/>
+export FACEBOOK_ID=[your facebook id]<br/>
+export DATABASE_URL=[your postgres database url]<br/>
+export MAIL_PASSWORD=[your gmail password]<br/>
+export AWS_ACCESS_KEY_ID=[your amazon web service access key id]<br/>
+export AWS_SECRET_ACCESS_KEY=[your amazon web service secret access key]<br/>
+export MY_BUCKET=[the name of your amazon s3 bucket]<br/>
   
 5. Write the following code:
 
