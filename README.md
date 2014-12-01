@@ -14,7 +14,6 @@ Hoping to reduce food waste, Harvestr connects people with a surplus of backyard
 ![Login With Facebook](/static/images/screenshot1.jpg)
 ####View your profile
 ![View your profile](/static/images/screenshot2.jpg)
-####View your open(available items for trade) on your profile
 ![View your items](/static/images/screenshot3.jpg)
 ####Edit your profile to change your location, add items, or change your item's attributes
 ![Edit items](/static/images/screenshot4.jpg)
