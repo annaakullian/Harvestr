@@ -9,6 +9,33 @@ Hoping to reduce food waste, Harvestr connects people with a surplus of backyard
 - [Technologies Used] (#technologies-used)
 - [Run Harvestr on your computer] (#run-harvestr-on-your-computer)
 
+####How it works:
+1) Login With Facebook
+![Login With Facebook](/static/images/screenshot1.jpg "Login With Facebook")
+2) View your profile
+![View your profile](/static/images/screenshot2.jpg "View Profile")
+3) View your open(available items for trade) on your profile
+![View your items](/static/images/screenshot3.jpg "View your open items")
+4) Edit your profile to change your location, add items, or change your item's attributes
+![Edit items](/static/images/screenshot4.jpg "Edit your items and information")
+5) Go to the Harvest Page where you can filter what you would like to search for
+![Harvest items](/static/images/screenshot6.jpg "Filter your search and press Harvest")
+6) View an item someone wants to trade. Vote "nope" or "like"
+![Edit items](/static/images/screenshot7.jpg "View items and vote nope or like!")
+7) Continue to view items
+![Edit items](/static/images/screenshot8.jpg "View more items")
+8) If there is a match, you will see this message
+![Edit items](/static/images/screenshot9.jpg "Match Message")
+9) If there is a match, your match's facebook profile picture as well as the item you liked will show up on your profile page
+![Edit items](/static/images/screenshot10.jpg "Your matches")
+
+
+
+####Technologies used:
+
+Python, Flask, JavaScript, HTML5, CSS3, jQuery, Postgresql, SQLAlchemy, Amazon S3, boto, Google Maps API, Gmail's SMTP, Oauth, Flask-Login, Authomatic 
+
+
 ####Run Harvestr on your computer:
 
 ####Environment
