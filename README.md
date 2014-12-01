@@ -15,14 +15,15 @@ Hoping to reduce food waste, Harvestr connects people with a surplus of backyard
 ####View your profile
 ![View your profile](/static/images/screenshot2.jpg)
 ![View your items](/static/images/screenshot3.jpg)
-####Edit your profile to change your location, add items, or change your item's attributes
+####Using the navbar, go to Edit your profile to change your location, add items, or change your item's attributes
 ![Edit items](/static/images/screenshot4.jpg)
-####Go to the Harvest Page where you can filter what you would like to search for
+####Using the navbar, Go to the Harvest Page where you can filter what you would like to search for
 ![Harvest items](/static/images/screenshot6.jpg)
-####View an item someone wants to trade. Vote "nope" or "like"
+####Items that meet your search criteria will show up one at a time as you vote "nope" (I would not trade one of my items for this item) or "like" (I would trade one of my items for this item).
 ![Edit items](/static/images/screenshot7.jpg)
-####If there is a match, you will see this message, and both users recieve an email
+####If there is a match, you will see this message, both users recieve an email, and you can continue to search for items to trade.
 ![Edit items](/static/images/screenshot9.jpg)
+![Edit items](/static/images/screenshot10.jpg)
 
 ####Technologies used:
 
