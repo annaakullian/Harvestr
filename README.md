@@ -4,25 +4,28 @@ Harvestr
 ####Project Description
 Hoping to reduce food waste, Harvestr connects people with a surplus of backyard produce.  Ten lemons for a bag of tomatoes, for example, or a bushel of kale for a pound of garlic. Users post fruits or veggies they want to trade, then specify what they want and a radius to search within. On this Tinder-style webapp, users swipe through potential trades, marking “yes” when they see something they want and “no” if they aren't interested. When there's a match, both users are notified via email.
 
+This webapp is also for those who are interested in the sharing economy who may not have gardens. With the gifting feature, those who have items and are not looking to trade, but rather to give them away for free, or to "gift" can post their items as a gift. Then those who are searching for gifts, can specify they are only interested in searching for gifts. 
+
 ####Table of Contents
 - [How it works] (#how-it-works)
 - [Technologies Used] (#technologies-used)
 - [Run Harvestr on your computer] (#run-harvestr-on-your-computer)
 
 ####How it works:
-####Login With Facebook
+####1. Login With Facebook
 ![Login With Facebook](/static/images/screenshot1.jpg)
-####View your profile
+####2. View your profile
 ![View your profile](/static/images/screenshot2.jpg)
 ![View your items](/static/images/screenshot3.jpg)
-####Using the navbar, go to Edit your profile to change your location, add items, or change your item's attributes
+####3. Using the navbar, go to Edit your profile to change your location, add items, or change your item's attributes
 ![Edit items](/static/images/screenshot4.jpg)
-####Using the navbar, Go to the Harvest Page where you can filter what you would like to search for
+####4. Using the navbar, Go to the Harvest Page where you can filter what you would like to search for
 ![Harvest items](/static/images/screenshot6.jpg)
-####Items that meet your search criteria will show up one at a time as you vote "nope" (I would not trade one of my items for this item) or "like" (I would trade one of my items for this item).
+####5. Items that meet your search criteria will show up one at a time as you vote "nope" (I would not trade one of my items for this item) or "like" (I would trade one of my items for this item).
 ![Edit items](/static/images/screenshot7.jpg)
-####If there is a match, you will see this message, both users recieve an email, and you can continue to search for items to trade.
+####6. If there is a match, you will see this message
 ![Edit items](/static/images/screenshot9.jpg)
+####7. and both users will an email like this:
 ![Edit items](/static/images/screenshot11.jpg)
 
 ####Technologies used:
