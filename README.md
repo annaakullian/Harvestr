@@ -10,8 +10,8 @@ Hoping to reduce food waste, Harvestr connects people with a surplus of backyard
 - [Run Harvestr on your computer] (#run-harvestr-on-your-computer)
 
 ####How it works:
-1) Login With Facebook
-![Login With Facebook](/static/images/screenshot1.jpg "Login With Facebook")
+####Login With Facebook
+![Login With Facebook](/static/images/screenshot1.jpg)
 2) View your profile
 ![View your profile](/static/images/screenshot2.jpg "View Profile")
 3) View your open(available items for trade) on your profile
