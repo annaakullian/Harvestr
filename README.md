@@ -8,7 +8,7 @@ How to run Harvestr on your computer:
 1. Make sure you have postgres and python 2.7 installed 
 2. Clone this repo
 3. I recommend creating a virtual environment
-4. get access keys for the following variables and write the following code:
+4. get access keys for the following variables and write the following code:<br/>
 export GOOGLE_MAPS_EMBED_KEY = [your google maps key]<br/>
 export FACEBOOK_SECRET = [your facebook secret key]<br/>
 export FACEBOOK_ID=[your facebook id]<br/>
