@@ -17,6 +17,7 @@ Hoping to reduce food waste, Harvestr connects people with a surplus of backyard
 <pre><code>$ git clone https://github.com/annaakullian/Harvestr.git</code></pre>
 
 2) Create and activate a virutal environment in the same directory:
+<pre><code>
 $ virtualenv env
 $ . env/bin/activate
 </code></pre>
@@ -29,7 +30,7 @@ $ . env/bin/activate
 1) Download and run postgres server
 
 2) Create the databse in PostgreSQL by running the generatedb.sh script. This will seed your database with data from a couple of sample users.
-<pre><code>$ ./generatedb.sh </code></pre>
+<pre><code>(env)$ ./generatedb.sh </code></pre>
 
 3) Install Python 2.7
 
