@@ -16,9 +16,8 @@ Hoping to reduce food waste, Harvestr connects people with a surplus of backyard
 1) Clone the repository:
 <pre><code>$ git clone https://github.com/annaakullian/Harvestr.git</code></pre>
 
-2) Create and activate a virutal environment in the same directory:
-<pre><code>
-$ virtualenv env
+2) Create and activate a virtual environment in the same directory:
+<pre><code>$ virtualenv env
 $ . env/bin/activate
 </code></pre>
 
@@ -37,8 +36,7 @@ $ . env/bin/activate
 ####Acess Keys:
 
 1) Get access keys for the following variables and write the following code:
-<pre><code>
-(env)$ export GOOGLE_MAPS_EMBED_KEY = [your google maps key]<br/>
+<pre><code>(env)$ export GOOGLE_MAPS_EMBED_KEY = [your google maps key]<br/>
 (env)$ export FACEBOOK_SECRET = [your facebook secret key]<br/>
 (env)$ export FACEBOOK_ID=[your facebook id]<br/>
 (env)$ export DATABASE_URL=[your postgres database url]<br/>
