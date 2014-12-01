@@ -13,7 +13,7 @@ How to run Harvestr on your computer:
 
 4. get access keys for the following variables and write the following code:
 
-export GOOGLE_MAPS_EMBED_KEY = [your google maps key]
+export GOOGLE_MAPS_EMBED_KEY = [your google maps key]<br/>
 export FACEBOOK_SECRET = [your facebook secret key]
 export FACEBOOK_ID=[your facebook id]
 export DATABASE_URL=[your postgres database url]
