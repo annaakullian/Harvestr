@@ -23,7 +23,7 @@ Hoping to reduce food waste, Harvestr connects people with a surplus of backyard
 ![Edit items](/static/images/screenshot7.jpg)
 ####If there is a match, you will see this message, both users recieve an email, and you can continue to search for items to trade.
 ![Edit items](/static/images/screenshot9.jpg)
-![Edit items](/static/images/screenshot10.jpg)
+![Edit items](/static/images/screenshot11.jpg)
 
 ####Technologies used:
 
