@@ -9,7 +9,7 @@ This webapp is also for those who are interested in the sharing economy who may 
 ####Table of Contents
 - [How it works] (#how-it-works)
 - [Technologies Used] (#technologies-used)
-- [Run Harvestr on your computer] (#run-harvestr-on-your-computer)
+- [Run Harvestr on your computer] (#run-Harvestr-on-your-computer)
 
 ###How it works:
 ####1. Login With Facebook
