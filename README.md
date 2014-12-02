@@ -60,11 +60,11 @@ $ . env/bin/activate
 ####Acess Keys:
 
 I used several APIs of which you will need access keys in order for the app to fully run. 
-*Create an account with facebook developers and get your keys here: https://developers.facebook.com/apps
-  *If you are interested, here is how facebook is integrated using authomatic: http://peterhudec.github.io/authomatic/examples/flask-simple.html
-*download postgres to get your postgres database url: http://www.postgresql.org/
-*create a gmail account, or use a current account to get a password for MAIL_PASSWORD
-*create an amazon web services account, and use s3 (amazon simple storage services): http://aws.amazon.com/s3/
+* Create an account with facebook developers and get your keys here: https://developers.facebook.com/apps
+  * If you are interested, here is how facebook is integrated using authomatic: http://peterhudec.github.io/authomatic/examples/flask-simple.html
+* download postgres to get your postgres database url: http://www.postgresql.org/
+* create a gmail account, or use a current account to get a password for MAIL_PASSWORD
+* create an amazon web services account, and use s3 (amazon simple storage services): http://aws.amazon.com/s3/
 this is where the photos are stored
 
 Add the following variables from your access keys and write the following code:
