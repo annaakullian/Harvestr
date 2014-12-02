@@ -7,9 +7,13 @@ Hoping to reduce food waste, Harvestr connects people with a surplus of backyard
 This webapp is also for those who are interested in the sharing economy who may not have gardens. Those who have items may choose to "gift" their item, meaning they are not looking to trade, but rather to give their item away for free. Others can then search for "gifts", and the "gifted" items will show up in their search. 
 
 ####Table of Contents
-- [How it works] (#how-it-works)
 - [Technologies Used] (#technologies-used)
+- [How it works] (#how-it-works)
 - [Run Harvestr on your computer] (#run-harvestr-on-your-computer)
+
+###Technologies used:
+
+Python, Flask, JavaScript, HTML5, CSS3, jQuery, Postgresql, SQLAlchemy, Amazon S3, boto, Google Maps API, Gmail's SMTP, Oauth, Flask-Login, Authomatic 
 
 ###How it works:
 ####1. Login With Facebook
@@ -27,10 +31,6 @@ This webapp is also for those who are interested in the sharing economy who may 
 ![Edit items](/static/images/screenshot9.jpg)
 ####7. and both users will recieve an email like this:
 ![Edit items](/static/images/screenshot11.jpg)
-
-###Technologies used:
-
-Python, Flask, JavaScript, HTML5, CSS3, jQuery, Postgresql, SQLAlchemy, Amazon S3, boto, Google Maps API, Gmail's SMTP, Oauth, Flask-Login, Authomatic 
 
 
 ###Run Harvestr on your computer:
