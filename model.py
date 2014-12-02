@@ -1,3 +1,10 @@
+"""Database models for Harvestr. 
+
+In this file there are tables for the user, the user's items, which items have been viewed,
+the item's attributes, which items have a match offer, which items are matched, 
+and the emails between the two users. 
+"""
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean

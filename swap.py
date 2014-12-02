@@ -1,3 +1,8 @@
+"""Functions and handlers for Harvestr.
+
+This file has all function and handlers, and the secret keys from the environment are accessed. 
+"""
+
 from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, make_response
 from werkzeug import secure_filename
 import hashlib
@@ -29,7 +34,7 @@ s3_bucket = conn.get_bucket(os.environ.get("MY_BUCKET"))
 DEBUG = True
 SECRET_KEY = 'hidden'
 
-#information for the gmail server for sending emails
+#information for the smtp gmail server for sending emails
 MAIL_SERVER='smtp.gmail.com'
 MAIL_PORT=465
 MAIL_USE_TLS = False
@@ -42,7 +47,7 @@ app.secret_key="annabanana"
 app.config.from_object(__name__)
 mail = Mail(app)
 
-#this is the path to the upload directory
+# this is the path to the upload directory, if not using Amazon s3
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 app.config['ALLOWED_EXTENSIONS'] = set(['jpg', 'jpeg', 'gif', 'png', 'pdf', 'txt'])
 def allowed_file(filename):
@@ -57,23 +62,35 @@ authomatic = Authomatic(AUTHOMATIC_CONFIG, 'your secret string', report_errors=F
 #key for googlemaps api
 key = os.environ.get("GOOGLE_MAPS_EMBED_KEY")
 
-#this is the home 
 @app.route('/')
 def home_page():
+	"""This is the homepage
+	"""
 	return render_template("home.html")
 
 @app.route('/matchopenitems', methods=['GET'])
 def matchopenitems():
+	"""This page returns the match's open items.
+
+	From a users profile page, they can click on their match's profile picture which will lead them 
+	to a page with all of that user's open items.
+	"""
 	user_id = request.args.get("user_id")
 	user = dbsession.query(User).filter_by(id=user_id).one()
 	user_items = user.items
 	return render_template("matchopenitems.html", user_items=user_items)
 
-# Login route for all OAuth providers. If one were to add a second provider 
-# (i.e. Twitter, Google), more logic could be added to this method by
-# # checkingthe "provider_name" variable
 @app.route('/login/<provider_name>/', methods=['GET', 'POST'])
 def login(provider_name):
+	"""This is the login route for all OAuth providers.
+
+	This route logs a user in with facebook, gets their information from their
+	facebook profile, and stores the user in our session. Once the user is logged in,
+	they are redirected to their profile page.	
+	"""
+	# If one were to add a second provider 
+	# (i.e. Twitter, Google), more logic could be added to this method by
+	# checkingthe "provider_name" variable
 	response = make_response()
 	result = authomatic.login(WerkzeugAdapter(request, response), provider_name)
 
@@ -102,26 +119,38 @@ def login(provider_name):
 
 	return response
 
-# Clear our session, logging the user out and returning them
-# to the home page.
 @app.route("/logout")
 @login_required
 def logout():
-    logout_user()
-    return redirect('/')
+	"""This route logs the user out.
 
-# flask-login required method
-# Tell flask-login how to find the current user in the database
+	This route clears the session, logs the user out, and returns them to the home page.
+	"""
+	logout_user()
+	return redirect('/')
+
 @login_manager.user_loader
 def load_user(id):
+	"""This route tells flask-login how to find the current user in the database.
+
+	This is a flask-login required method. 
+	It returns the current user.
+	"""
 	return dbsession.query(User).filter_by(id = id).first()
 
 @app.route('/howitworks')
 def how_it_works():
+	"""This route returns the html page that explains how the app works to the current user 
+	"""
 	return render_template("howitworks.html")
 
 @app.route('/profile')	
 def profile():
+	"""This route brings the user to their profile page.
+
+	The profile page shows the users profile picture from facebook, their address, email,
+	their open items, and all of their matches. 
+	"""
 	#looking for matches to show on profile page
 	#first, find matches for gifts
 	current_user_items = current_user.items
@@ -152,22 +181,20 @@ def profile():
 					if match_item:
 						item = dbsession.query(Item).filter_by(id=match_item.item_id).one()
 						match_items.append(item)
-
-	# user = dbsession.query(User).get(session['user_id'])
-	# item_dictionary = item_dictionary
 	return render_template("profile.html", match_items=match_items)
 
 @app.route('/alluserimages', methods=['GET'])	
 def allimages():
-	# user = dbsession.query(User).first()
-	# user = dbsession.query(User).get(session['user_id'])
+	"""This route shows an html page with all of the users items.
+	"""
 	return render_template("alluserimages.html")
 
 @app.route('/editprofile', methods=['GET'])
 def editprofile():
-	# user = dbsession.query(User).get(session['user_id'])
-	print "Current user", current_user
-	print "Current location", current_user.location
+	"""This route shows the users information from the database on the edit profile page.
+	
+	This will display the user's information as wel as their item's information.
+	"""
 	items_attribute_dictionary = {}
 	items = current_user.items
 	for item in items:
@@ -180,13 +207,13 @@ def editprofile():
 
 @app.route('/editprofile', methods=['POST'])
 def get_user_info():
-	# user = dbsession.query(User).get(session['user_id'])
-	# user_email = request.form['user_email']
+	"""This route gets the user's information from the edit profile page and saves it in the database. 
 
-	# if user.email != user_email:
-	# 	flash("email change not allowed")
-	# 	return redirect(url_for('editprofile'))
-
+	Here the user can change any of their information, which will then be updated
+	in the database. They can also add items and edit the item's attributes.
+	Once they save the information, they will be redirected to the profile page.  
+	"""
+	#Get the user location, and convert to latitude and longitude
 	user_location = request.form['user_location']
 	if len(user_location) < 2:
 		flash("invalid location")
@@ -205,12 +232,11 @@ def get_user_info():
 		flash("invalid user name")
 		return redirect('/editprofile')
 
+	#Get all user and item information and add to database
 	current_user.name = user_name
 	current_user.latitude = user_latitude
 	current_user.longitude = user_longitude
-	# current_user.email = user_email
 	current_user.location = user_location
-	# dbsession.commit()
 
 	description_attribute = ['item_description']
 
@@ -241,10 +267,8 @@ def get_user_info():
 		else:
 			photo_updates[photo_id] = {attr: value}
 
-
 	for photo_id, photo_attributes in photo_updates.iteritems():
 		for key, value in photo_attributes.iteritems():
-			#if key == "forv":
 			attribute = dbsession.query(ItemAttribute).filter_by(item_id=photo_id).filter_by(attribute_name=key).first()
 			if attribute is None:
 				attribute = ItemAttribute(\
@@ -254,8 +278,6 @@ def get_user_info():
 				dbsession.add(attribute)
 			else:
 				attribute.attribute_value = value
-			# dbsession.commit()
-
 
 	uploaded_files = request.files.getlist("file[]")
 
@@ -264,33 +286,25 @@ def get_user_info():
 	new_gift = request.form.getlist("gift_new[]")
 	new_prepicked = request.form.getlist("prepicked_new[]")
 	new_description = request.form.getlist("description_new[]")
-	# filenames = []
 
 	for i in range(len(uploaded_files)):
 		if uploaded_files[i].filename == '':
 			continue
+		
+		filedata = uploaded_files[i].stream.read()
+		# give each item a unique hash via their hash id   	
+		hash_id = hashlib.md5(filedata).hexdigest() 
 
-		filedata = uploaded_files[i].stream.read()  # actully binary contents of image 	
-		hash_id = hashlib.md5(filedata).hexdigest()  #  454574389593847598345 unique name
-
+		#set up information for photos stored in Amazon s3
 		k = Key(s3_bucket) 
 		k.key = hash_id 
 		k.set_contents_from_string(filedata, policy='public-read')
 		file_path = k.generate_url(0, query_auth=False)
-
-
-		# filename = secure_filename(uploaded_files[i].filename)
-		# filedata = uploaded_files[i].stream.read()
-		# hash_id = hashlib.md5(filedata).hexdigest()
-		# file_path = "/static/uploads/%s" % filename 
 		
 		if dbsession.query(Item).filter_by(hash_id=hash_id).first():
 			flash("This photo already exists! You can edit the information on your current photo")
 			return redirect(url_for('editprofile'))
 		else:
-			# uploaded_files[i].stream.seek(0)
-			# uploaded_files[i].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-			# filenames.append(filename)
 			item = Item(user_id=current_user.id, photo_path=file_path, hash_id=hash_id, description=new_description[i], date_item_added=datetime.datetime.now())
 			dbsession.add(item)
 	  		dbsession.commit()
@@ -329,30 +343,35 @@ def get_user_info():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
+	"""If not using Amazon S3, the photos would be saved here.
+	"""
 	return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
 
 @app.route('/harvest')
 def harvest():
+	"""This route is where the user can search for items to trade.
+	"""
 	return render_template("harvest.html", key=key)
-
-# /harvest-filter?veggie=veggie&fruit=fruit     
+ 
 @app.route('/harvest-filter')
 def filter():
+	"""This returns a list of items based on how the user filters.
+
+	The user can filter within a specified radius, and can filter by attribute of the 
+	items. The list of filtered items will display one by one on the harvest page. They 
+	are returned as a json string.
+	"""
 	veggie = request.args.get('Veggie')
 	other = request.args.get('Other')
 	fruit = request.args.get('Fruit')
 	checked_prepicked = request.args.get('Prepicked')
 	checked_gift = request.args.get('Gift')
 
-	# base query of all items by date added  (FIXME: reverse)
+	# base query of all items by date added 
 	query = dbsession.query(Item).order_by(Item.date_item_added)
-	# print len(query.all())
-	# ... but not things we offer
+	#filter out all of user's items
 	query = query.filter(Item.user_id != current_user.id)
-
-	# query = query.filter(ViewedItem.viewer_id = current_user.id)
-
+	#don't show items user has already seen 
 	viewed_items = dbsession.query(ItemViewed).filter_by(viewer_id = current_user.id).all()
 	if viewed_items:
 		viewed_item_ids = []
@@ -360,14 +379,7 @@ def filter():
 			viewed_item_ids.append(viewed_item.item_id)
 		print "item ids", viewed_item_ids
 		query = query.filter(~Item.id.in_(viewed_item_ids))
-
-
-	#dont show items that the user has already said "yes" or "no" to
-	#i want to filter out all of the items 
-	#query = query.filter()
-	##create a new database called "viewed items". that has a backref: viewers + items viewed 
-
-
+	#filter depending on what the user specified 
 	forv_list = []
 	if veggie:
 		forv_list.append('veggie')
@@ -398,15 +410,12 @@ def filter():
 								 .where(ItemAttribute.attribute_name=='status')
 								 .where(ItemAttribute.attribute_value=='open')
 									)			
-	# TODO: add filter for distance
+
 	harvest_items = query.all()
-	# fruits = [ Fruit(name=n, color=c), Fruit(name=n, color=c) ]
-	# stuff_to_return = [ {'name': f.name, 'color': f.color } for f in fruits ]
-	# stuff_to_return == [ { 'name': f1n, 'color': f1c }, { 'name': f2n, 'color': f2c } ]
-	# turn that into json
+
 	to_filter = [ {'id': f.id, 'photo': f.photo_path, 'description': f.description, 'latitude': f.user.latitude, 'longitude':f.user.longitude} for f in harvest_items] 
 
-	#radians?
+	#R is the earth's radius
 	R = 6373.0
 
 	user_longitude = current_user.longitude
@@ -420,6 +429,7 @@ def filter():
 
 	to_return = []
 
+	#geocoding equation from: http://stackoverflow.com/questions/19412462/getting-distance-between-two-points-based-on-latitude-longitude-python 
 	for item in to_filter:
 		item_latitude = (item['latitude'])
 		item_longitude = (item['longitude'])
@@ -435,32 +445,31 @@ def filter():
 		distance_miles = distance*0.621371
 		if distance_miles<=miles_desired:
 			to_return.append(item)
-	# print to_return
 
-	# json.dumps(to_return)
-	# print len(query.all())
-	print "ITEMS", [i['id'] for i in to_return]
 	return json.dumps(to_return)
-	#distance=1+mile&fruit=
-
-	# return render_template("harvest-result.html", to_return = to_return) 
 
 @app.route('/decision_no/<item_id>')
-def vote_no(item_id):  #, current_user_id
-	#add item to the database as a viewed item
+def vote_no(item_id):  
+	"""Route if decision is 'no' to an item.
+
+	The item is added to the viewed items table in the database
+	"""
 	viewed_item = ItemViewed(decision="no", item_id=item_id, viewer_id=current_user.id, date_viewed=datetime.datetime.now())
 	dbsession.add(viewed_item)
 	dbsession.commit()
 	return ""
 
 @app.route('/decision/<item_id>')
-def vote_yes(item_id):  #, current_user_id
-	#harvestee = person whose item current user is interested in
-	# current_user  = dbsession.query(User).filter_by(id=current_user_id).one()
-	#the item that the current user is interested in. 
+def vote_yes(item_id):
+	"""Route if decision is 'yes' to an item.
 
-	#add item to the database as a viewed item
+	Checks if there is a match, and returns a json message to the current user. 
+	Either an empty string if there is not a match, or a success message if 
+	there is a match with the user of the item the current user said yes to.
+	"""
+	#set message to empty string
 	message = ""
+	#add item to the database as a viewed item
 	viewed_item = ItemViewed(decision="yes", item_id=item_id, viewer_id=current_user.id, date_viewed=datetime.datetime.now())
 	dbsession.add(viewed_item)
 	dbsession.commit()
@@ -508,7 +517,6 @@ def vote_yes(item_id):  #, current_user_id
 
 		if harvestee_matchoffer_items:
 			harvestee_matchoffer_item_ids = [i.match_offer_id for i in harvestee_matchoffer_items]
-
 			#the common matches between the current user and the harvestee
 			common_matches = set(harvestee_matchoffer_item_ids) & set(current_user_matchoffer_item_ids)
 
@@ -522,11 +530,6 @@ def vote_yes(item_id):  #, current_user_id
 				if first_user_id != current_user.id:
 					match_offer.date_of_match = datetime.datetime.now()
 					message = "SUCCESSFUL HARVEST! Congratulations, you have a match. You will receive an email notification shortly!"
-					# user_2 = dbsession.query(User).filter_by(id=item_interested.user_id).one()
-					#user_1 = current_user
-					# match_email = Email(user_1_email=current_user.email, user_2_email=user_2.email, user_2_name=user_2.name)
-					# dbsession.add(match_email)
-					# send_email()
 					user1_email = current_user.email
 					user2 = dbsession.query(User).filter_by(id=item_interested.user_id).one()
 					user2_email = user2.email
