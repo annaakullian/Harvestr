@@ -43,7 +43,8 @@ MAIL_USERNAME = 'harvestr.swap@gmail.com'
 MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD") 
 
 app =  Flask(__name__)
-app.secret_key="annabanana"
+SECRET_KEY = os.environ.get("FLASK_SECRET_KEY", "ABC")
+app.secret_key=SECRET_KEY
 app.config.from_object(__name__)
 mail = Mail(app)
 
@@ -556,7 +557,11 @@ def vote_yes(item_id):
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	# app.run(debug=True)
+	# model.py 
+	PORT = int(os.environ.get(“PORT”, 5000))
+	app.run(debug=True, host=“0.0.0.0”, port=PORT)
+
 
 
 
